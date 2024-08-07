@@ -1,50 +1,39 @@
-# Welcome to your Expo app 👋
+# Welcome to AquaGuard
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This application is a community based water source mapping and quality reporting mobile application aimed to increase the water quality and to help users to find water sources and their status.
 
-## Get started
+## Project Setup (Windows)
 
-1. Install dependencies
+**1. Download and configure Android Studio.**
+
+- While we won't use android studio to build the app, we will use it as a package manager to install all the relevant dependencies to build the project.
+- Download Android Studio from [here](https://developer.android.com/studio).
+- After install android studio with default settings, open it and click on the "SDK Manager" button in the top right corner of the window.
+- In the SDK Manager window, click on the "SDK Tools" tab and install the following packages:
+   - Under the SDK Platform: *(Tick 'show package details' in the bottom right corner to reveal versions)*
+     - Android API 35 (Android SDK Platform 35, Sources for Android 35)
+   - Under the SDK Tools: *(Tick 'show package details' in the bottom right corner to reveal versions)*
+     - Android SDK Build-Tools 35.0.0
+     - NDK (Side by side) 26.1.10909125
+   - Android SDK Command-line Tools (latest)
+   - CMake (3.22.1)
+   - Android Emulator (34.2.16)
+   - Android SDK Platform-Tools (35.0.2)
+
+**2. Install dependencies**
 
    ```bash
    npm install
    ```
-
-2. Start the app
+**3. Install expo-dev-client**
 
    ```bash
-    npx expo start
+    npx expo install expo-dev-client
    ```
 
-In the output, you'll find options to open the app in a
+**4. Connect your android device and start the app**
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+    npx expo run:android
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
