@@ -1,0 +1,7 @@
+Variant: debugAndroidTest
+Config: debug
+Alias: AndroidDebugKey
+MD5: C0:57:73:2B:07:71:44:A2:37:04:BA:36:35:2B:07:8F
+SHA1: 22:BC:20:46:B4:ED:08:30:6D:38:3A:9C:BE:9D:FB:3D:EE:1B:75:9D
+SHA-256: 59:50:D5:17:1B:D5:2C:1E:72:CB:06:E9:70:2D:7A:FC:37:77:C9:3E:2E:9C:67:8B:CE:25:9F:CB:21:AD:64:8B
+Valid until: Thursday, July 23, 2054
