@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1036309944602",
+    "project_id": "aquaguard-5a867",
+    "storage_bucket": "aquaguard-5a867.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036309944602:android:832804295a1796d50834a3",
+        "android_client_info": {
+          "package_name": "com.uee.aquaGuard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036309944602-t4c2pe572nb75jgkqg4pljb226ldafd0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uee.aquaGuard",
+            "certificate_hash": "22bc2046b4ed08306d383a9cbe9dfb3dee1b759d"
+          }
+        },
+        {
+          "client_id": "1036309944602-u0dleghojfna522qs30kqss1edhtbt7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBevuIrbpO4wD039ENe8W--xxmoUY1fed4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1036309944602-u0dleghojfna522qs30kqss1edhtbt7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
