@@ -33,9 +33,9 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="map"
+                name="sources"
                 options={{
-                    title: 'Map',
+                    title: 'Water Sources',
                     tabBarIcon: ({color, focused}) => (
                         <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color}/>
                     ),
