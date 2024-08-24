@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
+import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {useSharedValue} from "react-native-reanimated";
 import {LocationEntry} from "@/types";
 
@@ -9,11 +9,25 @@ const PAGE_WIDTH = window.width;
 
 interface WaterCarouselData {
     entries: LocationEntry[];
+    carouselIndex: number;
 }
 
-function WaterCarousel({entries}: WaterCarouselData) {
+function WaterCarousel({entries, carouselIndex}: WaterCarouselData) {
     const progressValue = useSharedValue<number>(0);
+    const carouselRef = React.useRef<ICarouselInstance>(null);
 
+    const handleCarouselIndexChange = (index: number) => {
+        if (carouselRef.current) {
+            carouselRef.current.scrollTo({
+                index: index,
+                animated: true
+            });
+        }
+    }
+
+    useEffect(() => {
+        handleCarouselIndexChange(carouselIndex);
+    }, [carouselIndex]);
 
     const waterCarouselStyleSheet = StyleSheet.create({
         mainView: {
@@ -41,6 +55,7 @@ function WaterCarousel({entries}: WaterCarouselData) {
     return (
         <View style={waterCarouselStyleSheet.mainView}>
             <Carousel
+                ref={carouselRef}
                 vertical={false}
                 width={PAGE_WIDTH}
                 height={PAGE_WIDTH}

@@ -1,5 +1,5 @@
 import MapView, {Marker, PROVIDER_GOOGLE, Region} from "react-native-maps";
-import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React, {useEffect, useRef, useState} from "react";
 import {LocationEntry, MapDisplayPosition} from "@/types";
 
@@ -8,13 +8,15 @@ interface MapFragmentData {
     markerLocations: LocationEntry[];
     startLocation: LocationEntry;
     focusedLocation?: Region;
+    setCarouselIndex?: (index: number) => void;
 }
 
 const MapFragment = ({
                          mapFragmentPosition,
                          markerLocations,
                          startLocation,
-                         focusedLocation
+                         focusedLocation,
+                         setCarouselIndex
                      }: MapFragmentData): React.JSX.Element => {
     const {left, right, top, bottom} = mapFragmentPosition;
     const mapRef = useRef<MapView>(null);
@@ -50,6 +52,12 @@ const MapFragment = ({
             setFilteredMarkers([]);
         }
     }, [searchQuery, markerLocations]);
+
+    const handleCarouselIndexChange = (index: number) => {
+        if (setCarouselIndex) {
+            setCarouselIndex(index);
+        }
+    }
 
     const mapFragmentStyleSheet = StyleSheet.create({
         container: {
@@ -109,6 +117,7 @@ const MapFragment = ({
                         <TouchableOpacity
                             style={mapFragmentStyleSheet.dropdownItem}
                             onPress={() => {
+                                Keyboard.dismiss();
                                 const newRegion = {
                                     latitude: item.latitude,
                                     longitude: item.longitude,
@@ -118,6 +127,7 @@ const MapFragment = ({
                                 mapRef.current?.animateToRegion(newRegion, 1000);
                                 setSearchQuery(item.title);
                                 setFilteredMarkers([]);
+                                handleCarouselIndexChange(markerLocations.indexOf(item));
                             }}
                         >
                             <Text>{item.title}</Text>
