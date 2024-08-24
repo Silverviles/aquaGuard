@@ -1,3 +1,4 @@
+// Update DummyValues.ts
 import {LocationEntry} from "@/types";
 
 export const entries: LocationEntry[] = [
@@ -7,7 +8,8 @@ export const entries: LocationEntry[] = [
         latitude: 37.7749,
         longitude: -122.4194,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
+        image: ''
     },
     {
         title: 'Los Angeles',
@@ -15,7 +17,8 @@ export const entries: LocationEntry[] = [
         latitude: 34.0522,
         longitude: -118.2437,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
+        image: ''
     },
     {
         title: 'New York',
@@ -23,7 +26,8 @@ export const entries: LocationEntry[] = [
         latitude: 40.7128,
         longitude: -74.0060,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
+        image: ''
     },
     {
         title: 'Chicago',
@@ -31,7 +35,8 @@ export const entries: LocationEntry[] = [
         latitude: 41.8781,
         longitude: -87.6298,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
+        image: ''
     },
     {
         title: 'Houston',
@@ -39,6 +44,7 @@ export const entries: LocationEntry[] = [
         latitude: 29.7604,
         longitude: -95.3698,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
+        longitudeDelta: 0.0421,
+        image: ''
     }
 ];

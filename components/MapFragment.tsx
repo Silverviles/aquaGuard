@@ -1,7 +1,14 @@
 import MapView, {Marker, PROVIDER_GOOGLE, Region} from "react-native-maps";
 import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React, {useEffect, useRef, useState} from "react";
-import {LocationEntry, MapFragmentData} from "@/types";
+import {LocationEntry, MapDisplayPosition} from "@/types";
+
+interface MapFragmentData {
+    mapFragmentPosition: MapDisplayPosition;
+    markerLocations: LocationEntry[];
+    startLocation: LocationEntry;
+    focusedLocation?: Region;
+}
 
 const MapFragment = ({
                          mapFragmentPosition,
