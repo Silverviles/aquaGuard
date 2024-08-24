@@ -1,4 +1,5 @@
 export interface LocationEntry {
+    id: string,
     title: string,
     description: string,
     latitude: number,

@@ -9,25 +9,27 @@ const PAGE_WIDTH = window.width;
 
 interface WaterCarouselData {
     entries: LocationEntry[];
-    carouselIndex: number;
+    carouselId: string;
+    setCarouselId?: (id: string) => void;
 }
 
-function WaterCarousel({entries, carouselIndex}: WaterCarouselData) {
+function WaterCarousel({entries, carouselId, setCarouselId}: WaterCarouselData) {
     const progressValue = useSharedValue<number>(0);
     const carouselRef = React.useRef<ICarouselInstance>(null);
 
-    const handleCarouselIndexChange = (index: number) => {
-        if (carouselRef.current) {
+    const handleCarouselIdChange = (id: string) => {
+        const entryIndex = entries.findIndex(entry => entry.id === id);
+        if (entryIndex !== -1 && carouselRef.current) {
             carouselRef.current.scrollTo({
-                index: index,
+                index: entryIndex,
                 animated: true
             });
         }
     }
 
     useEffect(() => {
-        handleCarouselIndexChange(carouselIndex);
-    }, [carouselIndex]);
+        handleCarouselIdChange(carouselId);
+    }, [carouselId]);
 
     const waterCarouselStyleSheet = StyleSheet.create({
         mainView: {
@@ -78,6 +80,11 @@ function WaterCarousel({entries, carouselIndex}: WaterCarouselData) {
                         <Text>{item.description}</Text>
                     </View>
                 )}
+                onScrollEnd={(index) => {
+                    if (setCarouselId) {
+                        setCarouselId(entries[index].id);
+                    }
+                }}
             />
         </View>
     );

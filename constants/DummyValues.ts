@@ -3,6 +3,7 @@ import {LocationEntry} from "@/types";
 
 export const entries: LocationEntry[] = [
     {
+        id: '1',
         title: 'San Francisco',
         description: 'Description for San Francisco',
         latitude: 37.7749,
@@ -12,6 +13,7 @@ export const entries: LocationEntry[] = [
         image: ''
     },
     {
+        id: '2',
         title: 'Los Angeles',
         description: 'Description for Los Angeles',
         latitude: 34.0522,
@@ -21,6 +23,7 @@ export const entries: LocationEntry[] = [
         image: ''
     },
     {
+        id: '3',
         title: 'New York',
         description: 'Description for New York',
         latitude: 40.7128,
@@ -30,6 +33,7 @@ export const entries: LocationEntry[] = [
         image: ''
     },
     {
+        id: '4',
         title: 'Chicago',
         description: 'Description for Chicago',
         latitude: 41.8781,
@@ -39,6 +43,7 @@ export const entries: LocationEntry[] = [
         image: ''
     },
     {
+        id: '5',
         title: 'Houston',
         description: 'Description for Houston',
         latitude: 29.7604,

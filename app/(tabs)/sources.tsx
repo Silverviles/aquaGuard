@@ -6,7 +6,7 @@ import {START_LOCATION, WATER_SOURCE_MAP_BOUNDARIES} from "@/constants/StaticVal
 import {entries} from "@/constants/DummyValues";
 
 export default () => {
-    const [carouselIndex, setCarouselIndex] = useState(0);
+    const [carouselId, setCarouselId] = useState('');
 
     return (
         <View style={styles.container}>
@@ -14,10 +14,11 @@ export default () => {
                 mapFragmentPosition={WATER_SOURCE_MAP_BOUNDARIES}
                 markerLocations={entries}
                 startLocation={START_LOCATION}
-                setCarouselIndex={setCarouselIndex}
+                setCarouselId={setCarouselId}
+                carouselId={carouselId}
             />
             <View style={styles.carouselContainer}>
-                <WaterCarousel entries={entries} carouselIndex={carouselIndex}/>
+                <WaterCarousel entries={entries} carouselId={carouselId} setCarouselId={setCarouselId}/>
             </View>
         </View>
     );

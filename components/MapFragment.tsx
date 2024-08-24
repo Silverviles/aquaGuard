@@ -8,7 +8,8 @@ interface MapFragmentData {
     markerLocations: LocationEntry[];
     startLocation: LocationEntry;
     focusedLocation?: Region;
-    setCarouselIndex?: (index: number) => void;
+    setCarouselId?: (index: string) => void;
+    carouselId: string;
 }
 
 const MapFragment = ({
@@ -16,12 +17,26 @@ const MapFragment = ({
                          markerLocations,
                          startLocation,
                          focusedLocation,
-                         setCarouselIndex
+                         setCarouselId,
+                         carouselId
                      }: MapFragmentData): React.JSX.Element => {
     const {left, right, top, bottom} = mapFragmentPosition;
     const mapRef = useRef<MapView>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredMarkers, setFilteredMarkers] = useState<LocationEntry[]>([]);
+
+    useEffect(() => {
+        const entry = markerLocations.find(marker => marker.id === carouselId);
+        if (entry && mapRef.current) {
+            const newRegion = {
+                latitude: entry.latitude,
+                longitude: entry.longitude,
+                latitudeDelta: entry.latitudeDelta,
+                longitudeDelta: entry.longitudeDelta,
+            };
+            mapRef.current.animateToRegion(newRegion, 1000);
+        }
+    }, [carouselId, markerLocations]);
 
     useEffect(() => {
         if (focusedLocation && mapRef.current) {
@@ -53,9 +68,9 @@ const MapFragment = ({
         }
     }, [searchQuery, markerLocations]);
 
-    const handleCarouselIndexChange = (index: number) => {
-        if (setCarouselIndex) {
-            setCarouselIndex(index);
+    const handleCarouselIdChange = (id: string) => {
+        if (setCarouselId) {
+            setCarouselId(id);
         }
     }
 
@@ -127,7 +142,7 @@ const MapFragment = ({
                                 mapRef.current?.animateToRegion(newRegion, 1000);
                                 setSearchQuery(item.title);
                                 setFilteredMarkers([]);
-                                handleCarouselIndexChange(markerLocations.indexOf(item));
+                                handleCarouselIdChange(item.id);
                             }}
                         >
                             <Text>{item.title}</Text>
