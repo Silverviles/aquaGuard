@@ -29,32 +29,13 @@ the water quality and to help users to find water sources and their status.
    npm install
    ```
 
-**2. Install react native firebase modules**
-
-  ```bash
-  npm install @react-native-firebase/app
-  ```
-
-**3. Install Authentication and Crashlytics modules**
-
-  ```bash
-  npm install @react-native-firebase/auth
-  npm install @react-native-firebase/crashlytics
-  ```
-
-**4. Install other dependencies**
-
-   ```bash
-    npx expo install expo-camera
-   ```
-
-**5. Install expo-dev-client**
+**3. Install expo-dev-client**
 
    ```bash
     npx expo install expo-dev-client
    ```
 
-**6. Connect your android device and start the app**
+**4. Connect your android device and start the app**
 
    ```bash
     npx expo run:android

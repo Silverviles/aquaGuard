@@ -68,15 +68,12 @@ const MapFragment = ({
     const dynamicStyles = StyleSheet.create({
         container: {
             position: 'absolute',
-            left: `${left}%`,
-            right: `${right}%`,
-            top: `${top}%`,
-            bottom: `${bottom}%`,
+            left: left,
+            right: right,
+            top: top,
+            bottom: bottom,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            borderRadius: 20,
-            borderWidth: 2,
-            borderColor: 'white',
             overflow: 'hidden'
         },
         map: {
@@ -88,7 +85,7 @@ const MapFragment = ({
             left: 10,
             right: 10,
             backgroundColor: 'white',
-            borderRadius: 5,
+            borderRadius: 15,
             padding: 10,
             zIndex: 1,
         },
