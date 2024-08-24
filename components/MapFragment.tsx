@@ -1,39 +1,18 @@
 import MapView, {Marker, PROVIDER_GOOGLE, Region} from "react-native-maps";
 import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React, {useEffect, useRef, useState} from "react";
-
-interface MapDisplayPosition {
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-}
-
-interface MarkerLocation {
-    latitude: number;
-    longitude: number;
-    latitudeDelta: number;
-    longitudeDelta: number;
-    title: string;
-}
-
-interface MapFragmentProps {
-    location: MapDisplayPosition;
-    markerLocations: MarkerLocation[];
-    startLocation: MarkerLocation;
-    focusedLocation?: Region;
-}
+import {LocationEntry, MapFragmentData} from "@/types";
 
 const MapFragment = ({
-                         location,
+                         mapFragmentPosition,
                          markerLocations,
                          startLocation,
                          focusedLocation
-                     }: MapFragmentProps): React.JSX.Element => {
-    const {left, right, top, bottom} = location;
+                     }: MapFragmentData): React.JSX.Element => {
+    const {left, right, top, bottom} = mapFragmentPosition;
     const mapRef = useRef<MapView>(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [filteredMarkers, setFilteredMarkers] = useState<MarkerLocation[]>([]);
+    const [filteredMarkers, setFilteredMarkers] = useState<LocationEntry[]>([]);
 
     useEffect(() => {
         if (focusedLocation && mapRef.current) {
@@ -65,7 +44,7 @@ const MapFragment = ({
         }
     }, [searchQuery, markerLocations]);
 
-    const dynamicStyles = StyleSheet.create({
+    const mapFragmentStyleSheet = StyleSheet.create({
         container: {
             position: 'absolute',
             left: left,
@@ -107,21 +86,21 @@ const MapFragment = ({
     });
 
     return (
-        <View style={dynamicStyles.container}>
+        <View style={mapFragmentStyleSheet.container}>
             <TextInput
-                style={dynamicStyles.searchBar}
+                style={mapFragmentStyleSheet.searchBar}
                 placeholder="Search"
                 value={searchQuery}
                 onChangeText={setSearchQuery}
             />
             {filteredMarkers.length > 0 && (
                 <FlatList
-                    style={dynamicStyles.dropdown}
+                    style={mapFragmentStyleSheet.dropdown}
                     data={filteredMarkers}
                     keyExtractor={(item) => item.title}
                     renderItem={({item}) => (
                         <TouchableOpacity
-                            style={dynamicStyles.dropdownItem}
+                            style={mapFragmentStyleSheet.dropdownItem}
                             onPress={() => {
                                 const newRegion = {
                                     latitude: item.latitude,
@@ -142,7 +121,7 @@ const MapFragment = ({
             <MapView
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE}
-                style={dynamicStyles.map}
+                style={mapFragmentStyleSheet.map}
                 region={{
                     latitude: startLocation.latitude,
                     longitude: startLocation.longitude,
