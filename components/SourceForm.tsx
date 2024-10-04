@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 const SourceForm = () => {
@@ -24,11 +24,15 @@ const SourceForm = () => {
 
     const handleSubmit = () => {
         // Handle form submission logic here
-        console.log({ name, latitude, longitude, description, photos });
+        console.log({name, latitude, longitude, description, photos});
     };
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+            <Text style={styles.title}>Add Water Source</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Name"
@@ -50,21 +54,23 @@ const SourceForm = () => {
                 keyboardType="numeric"
             />
             <TextInput
-                style={styles.input}
+                style={[styles.input, styles.multiInput]}
                 placeholder="Description"
                 value={description}
                 onChangeText={setDescription}
                 multiline
             />
-            <Button title="Attach Photo" onPress={pickImage} />
-            <View style={styles.photosContainer}>
-                {photos.map((photo, index) => (
-                    <Image key={index} source={{ uri: photo }} style={styles.photo} />
-                ))}
-            </View>
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <TouchableOpacity style={[styles.submitButton, {backgroundColor: "blue"}]} onPress={handleSubmit}>
                 <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                <Text style={styles.submitButtonText} onPress={pickImage}>Attach Photo</Text>
+            </TouchableOpacity>
+            <View style={styles.photosContainer}>
+                {photos.map((photo, index) => (
+                    <Image key={index} source={{uri: photo}} style={styles.photo}/>
+                ))}
+            </View>
         </View>
     );
 };
@@ -72,14 +78,38 @@ const SourceForm = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingTop: 100,
         padding: 20,
+        backgroundColor: '#fff',
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 50,
+        right: 30,
+        zIndex: 10,
+    },
+    closeButtonText: {
+        fontSize: 24,
+        color: 'black',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 100,
+        textAlign: 'center',
     },
     input: {
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
         marginBottom: 10,
+        backgroundColor: 'white',
+        borderRadius: 15,
         padding: 10,
+    },
+    multiInput: {
+        textAlignVertical: 'top',
+        height: 100,
     },
     photosContainer: {
         flexDirection: 'row',
@@ -93,8 +123,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     submitButton: {
-        backgroundColor: 'blue',
+        backgroundColor: 'grey',
+        borderRadius: 15,
         padding: 10,
+        marginBottom: 10,
         alignItems: 'center',
     },
     submitButtonText: {
