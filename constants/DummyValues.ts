@@ -1,7 +1,6 @@
-// Update DummyValues.ts
-import {LocationEntry} from "@/types";
+import { WaterSourceLocationEntry } from "@/types";
 
-export const entries: LocationEntry[] = [
+export const entries: WaterSourceLocationEntry[] = [
     {
         id: '1',
         title: 'San Francisco',
@@ -10,7 +9,7 @@ export const entries: LocationEntry[] = [
         longitude: -122.4194,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        image: ''
+        images: []
     },
     {
         id: '2',
@@ -20,7 +19,7 @@ export const entries: LocationEntry[] = [
         longitude: -118.2437,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        image: ''
+        images: []
     },
     {
         id: '3',
@@ -30,7 +29,7 @@ export const entries: LocationEntry[] = [
         longitude: -74.0060,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        image: ''
+        images: []
     },
     {
         id: '4',
@@ -40,7 +39,7 @@ export const entries: LocationEntry[] = [
         longitude: -87.6298,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        image: ''
+        images: []
     },
     {
         id: '5',
@@ -50,6 +49,6 @@ export const entries: LocationEntry[] = [
         longitude: -95.3698,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        image: ''
+        images: []
     }
 ];

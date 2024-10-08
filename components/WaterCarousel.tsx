@@ -2,13 +2,13 @@ import React, {useEffect} from 'react';
 import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {useSharedValue} from "react-native-reanimated";
-import {LocationEntry} from "@/types";
+import {WaterSourceLocationEntry} from "@/types";
 
 const window = Dimensions.get('window');
 const PAGE_WIDTH = window.width;
 
 interface WaterCarouselData {
-    entries: LocationEntry[];
+    entries: WaterSourceLocationEntry[];
     carouselId: string;
     setCarouselId?: (id: string) => void;
 }

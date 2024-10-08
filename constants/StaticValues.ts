@@ -1,6 +1,6 @@
-import {LocationEntry, MapDisplayPosition} from "@/types";
+import {WaterSourceLocationEntry, MapDisplayPosition} from "@/types";
 
-export const START_LOCATION: LocationEntry = {
+export const START_LOCATION: WaterSourceLocationEntry = {
     latitude: 6.9143498,
     longitude: 79.972684,
     latitudeDelta: 0.05,

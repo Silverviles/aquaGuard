@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import {WaterSourceLocationEntry} from "@/types";
+import {insertUpdateWaterSourceData} from "@/config/water_source";
 
 const SourceForm = () => {
     const [name, setName] = useState('');
@@ -23,7 +25,18 @@ const SourceForm = () => {
     };
 
     const handleSubmit = () => {
-        // Handle form submission logic here
+        const waterSource: WaterSourceLocationEntry = {
+            id: Date.now().toString(), // Generate a unique ID
+            title: name,
+            description: description,
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            latitudeDelta: 0.0922, // Default value, adjust as needed
+            longitudeDelta: 0.0421, // Default value, adjust as needed
+            images: photos,
+        };
+
+        insertUpdateWaterSourceData(waterSource);
         console.log({name, latitude, longitude, description, photos});
     };
 

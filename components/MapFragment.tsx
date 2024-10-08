@@ -1,12 +1,12 @@
 import MapView, {Marker, PROVIDER_GOOGLE, Region} from "react-native-maps";
 import {FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import React, {useEffect, useRef, useState} from "react";
-import {LocationEntry, MapDisplayPosition} from "@/types";
+import {WaterSourceLocationEntry, MapDisplayPosition} from "@/types";
 
 interface MapFragmentData {
     mapFragmentPosition: MapDisplayPosition;
-    markerLocations: LocationEntry[];
-    startLocation: LocationEntry;
+    markerLocations: WaterSourceLocationEntry[];
+    startLocation: WaterSourceLocationEntry;
     focusedLocation?: Region;
     setCarouselId?: (index: string) => void;
     carouselId: string;
@@ -23,7 +23,7 @@ const MapFragment = ({
     const {left, right, top, bottom} = mapFragmentPosition;
     const mapRef = useRef<MapView>(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [filteredMarkers, setFilteredMarkers] = useState<LocationEntry[]>([]);
+    const [filteredMarkers, setFilteredMarkers] = useState<WaterSourceLocationEntry[]>([]);
 
     useEffect(() => {
         const entry = markerLocations.find(marker => marker.id === carouselId);

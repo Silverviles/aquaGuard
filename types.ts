@@ -1,4 +1,4 @@
-export interface LocationEntry {
+export interface WaterSourceLocationEntry {
     id: string,
     title: string,
     description: string,
@@ -6,7 +6,7 @@ export interface LocationEntry {
     longitude: number,
     latitudeDelta: number,
     longitudeDelta: number,
-    image?: string,
+    images?: string[],
 }
 
 export interface MapDisplayPosition {
