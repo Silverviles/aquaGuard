@@ -3,6 +3,8 @@ import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-
 import * as ImagePicker from 'expo-image-picker';
 import {WaterSourceLocationEntry} from "@/types";
 import {insertUpdateWaterSourceData} from "@/config/water_source";
+import firebase from "firebase/compat";
+import storage = firebase.storage;
 
 const SourceForm = () => {
     const [name, setName] = useState('');
@@ -24,7 +26,17 @@ const SourceForm = () => {
         }
     };
 
-    const handleSubmit = () => {
+    const uploadImage = async (uri: string) => {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const ref = storage().ref().child(`images/${Date.now()}_${Math.random().toString(36).substring(7)}`);
+        await ref.put(blob);
+        return await ref.getDownloadURL();
+    };
+
+    const handleSubmit = async () => {
+        const imageUrls = await Promise.all(photos.map(photo => uploadImage(photo)));
+
         const waterSource: WaterSourceLocationEntry = {
             id: Date.now().toString(), // Generate a unique ID
             title: name,
@@ -33,7 +45,7 @@ const SourceForm = () => {
             longitude: parseFloat(longitude),
             latitudeDelta: 0.0922, // Default value, adjust as needed
             longitudeDelta: 0.0421, // Default value, adjust as needed
-            images: photos,
+            images: imageUrls,
         };
 
         insertUpdateWaterSourceData(waterSource);
