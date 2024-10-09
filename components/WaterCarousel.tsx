@@ -72,7 +72,7 @@ function WaterCarousel({entries, carouselId, setCarouselId}: WaterCarouselData) 
                     <View style={waterCarouselStyleSheet.cardView}>
                         <Text style={{}}>{item.title}</Text>
                         <Image
-                            source={item.image != '' ? {uri: item.image} : require('@/assets/images/dummy_location.jpg')}
+                            source={item.images[0] != '' ? {uri: item.images[0]} : require('@/assets/images/dummy_location.jpg')}
                             style={waterCarouselStyleSheet.cardImage}
                             resizeMode="contain"
                             onError={(error) => console.log('Error loading image: ', error)}
