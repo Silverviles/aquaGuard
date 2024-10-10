@@ -18,8 +18,9 @@ const MapFragment = ({
                          startLocation,
                          focusedLocation,
                          setCarouselId,
-                         carouselId
-                     }: MapFragmentData): React.JSX.Element => {
+                         carouselId,
+                         onLongPress
+                     }: MapFragmentData & { onLongPress: (coords: { latitude: number, longitude: number }) => void }): React.JSX.Element => {
     const {left, right, top, bottom} = mapFragmentPosition;
     const mapRef = useRef<MapView>(null);
     const [searchQuery, setSearchQuery] = useState("");
@@ -160,6 +161,7 @@ const MapFragment = ({
                     latitudeDelta: startLocation.latitudeDelta,
                     longitudeDelta: startLocation.longitudeDelta,
                 }}
+                onLongPress={(e) => onLongPress(e.nativeEvent.coordinate)}
             >
                 {markerLocations.map((location, index) => (
                     <Marker

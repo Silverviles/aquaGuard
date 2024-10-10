@@ -3,13 +3,18 @@ import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-
 import * as ImagePicker from 'expo-image-picker';
 import {WaterSourceLocationEntry} from "@/types";
 import {insertUpdateWaterSourceData} from "@/config/water_source";
-import { storage } from "@/config/firebaseConfig";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {storage} from "@/config/firebaseConfig";
+import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
 
-const SourceForm = () => {
+interface SourceFormProps {
+    setShowForm?: (value: (((prevState: boolean) => boolean) | boolean)) => void;
+    initialCoordinates?: { latitude: number, longitude: number };
+}
+
+const SourceForm = ({setShowForm, initialCoordinates}: SourceFormProps) => {
     const [name, setName] = useState('');
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
+    const [latitude, setLatitude] = useState(initialCoordinates?.latitude.toString() || '');
+    const [longitude, setLongitude] = useState(initialCoordinates?.longitude.toString() || '');
     const [description, setDescription] = useState('');
     const [photos, setPhotos] = useState<string[]>([]);
 
@@ -49,12 +54,21 @@ const SourceForm = () => {
         };
 
         insertUpdateWaterSourceData(waterSource);
+        if (setShowForm) {
+            setShowForm(false);
+        }
         console.log({name, latitude, longitude, description, photos});
+    };
+
+    const closeForm = () => {
+        if (setShowForm) {
+            setShowForm(false);
+        }
     };
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.closeButton}>
+            <TouchableOpacity style={styles.closeButton} onPress={closeForm}>
                 <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
             <Text style={styles.title}>Add Water Source</Text>
@@ -88,7 +102,7 @@ const SourceForm = () => {
             <TouchableOpacity style={[styles.submitButton, {backgroundColor: "blue"}]} onPress={handleSubmit}>
                 <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <TouchableOpacity style={styles.submitButton}>
                 <Text style={styles.submitButtonText} onPress={pickImage}>Attach Photo</Text>
             </TouchableOpacity>
             <View style={styles.photosContainer}>
@@ -114,7 +128,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     closeButtonText: {
-        fontSize: 24,
+        fontSize: 50,
         color: 'black',
     },
     title: {

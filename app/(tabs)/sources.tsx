@@ -9,29 +9,41 @@ import SourceForm from "@/components/SourceForm";
 export default () => {
     const [carouselId, setCarouselId] = useState('');
     const [showForm, setShowForm] = useState(false);
+    const [formCoordinates, setFormCoordinates] = useState<{ latitude: number, longitude: number } | null>(null);
+
+    const handleLongPress = (coords: { latitude: number, longitude: number }) => {
+        setFormCoordinates(coords);
+        setShowForm(true);
+    };
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.roundButton} onPress={() => setShowForm(!showForm)}>
-                <Text style={styles.buttonText}>+</Text>
-            </TouchableOpacity>
             {
-                showForm ? (
-                    <SourceForm/>
-                ) : (
-                    <>
-                        <MapFragment
-                            mapFragmentPosition={WATER_SOURCE_MAP_BOUNDARIES}
-                            markerLocations={entries}
-                            startLocation={START_LOCATION}
-                            setCarouselId={setCarouselId}
-                            carouselId={carouselId}
-                        />
-                        <View style={styles.carouselContainer}>
-                            <WaterCarousel entries={entries} carouselId={carouselId} setCarouselId={setCarouselId}/>
-                        </View>
-                    </>
+                !showForm && (
+                    <TouchableOpacity style={styles.roundButton} onPress={() => setShowForm(true)}>
+                        <Text style={styles.buttonText}>+</Text>
+                    </TouchableOpacity>
                 )
+            }
+            {
+                <>
+                    <MapFragment
+                        mapFragmentPosition={WATER_SOURCE_MAP_BOUNDARIES}
+                        markerLocations={entries}
+                        startLocation={START_LOCATION}
+                        setCarouselId={setCarouselId}
+                        carouselId={carouselId}
+                        onLongPress={handleLongPress}
+                    />
+                    <View style={styles.carouselContainer}>
+                        <WaterCarousel entries={entries} carouselId={carouselId} setCarouselId={setCarouselId}/>
+                    </View>
+                    {showForm && (
+                        <View style={styles.formContainer}>
+                            <SourceForm setShowForm={setShowForm} initialCoordinates={formCoordinates}/>
+                        </View>
+                    )}
+                </>
             }
         </View>
     );
@@ -49,6 +61,15 @@ const styles = StyleSheet.create({
         height: 300,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    formContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Optional: add a semi-transparent background
+        zIndex: 10,
     },
     roundButton: {
         position: 'absolute',
