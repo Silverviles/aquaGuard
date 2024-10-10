@@ -109,6 +109,7 @@ export default function HomeScreen() {
       {/* Floating button */}
       <TouchableOpacity
         style={styles.floatingButton}
+        //ignore this error guys it works :)
         onPress={() => navigation.navigate("report-form")}
       >
         <Ionicons name="add" size={20} color="#fff" />

@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { Picker } from "@react-native-picker/picker";
 import { WaterSourceLocationEntry } from "@/types";
 import { insertUpdateWaterSourceData } from "@/config/water_source";
 import { storage } from "@/config/firebaseConfig";
@@ -30,6 +31,7 @@ interface SourceFormProps {
 const ReportForm = ({ setShowForm, initialCoordinates }: SourceFormProps) => {
   const [name, setName] = useState("");
   const navigation = useNavigation();
+  const [selectedOption, setSelectedOption] = useState("option1");
   const [latitude, setLatitude] = useState(
     initialCoordinates?.latitude.toString() || ""
   );
@@ -86,12 +88,6 @@ const ReportForm = ({ setShowForm, initialCoordinates }: SourceFormProps) => {
     console.log({ name, latitude, longitude, description, photos });
   };
 
-  const closeForm = () => {
-    if (setShowForm) {
-      setShowForm(false);
-    }
-  };
-
   return (
     <GestureHandlerRootView style={styles.gestureHandlerContainer}>
       <ParallaxScrollView
@@ -104,34 +100,68 @@ const ReportForm = ({ setShowForm, initialCoordinates }: SourceFormProps) => {
           <ThemedView style={styles.header}>
             <TouchableOpacity
               style={styles.floatingButton}
+              //ignore this error guys it works :)
               onPress={() => navigation.navigate("index")}
             >
               <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.title}>Add Water Source</Text>
+            <Text style={styles.title}>Make A Report</Text>
           </ThemedView>
 
           <View style={styles.card}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 16,
+              }}
+            >
+              Enter What you reporting about
+            </Text>
+            <Picker
+              selectedValue={selectedOption}
+              onValueChange={(itemValue) => setSelectedOption(itemValue)}
+              style={{
+                height: 50,
+                width: "100%",
+                marginBottom: 5,
+              }}
+            >
+              <Picker.Item
+                label="Contaminated or Polluted Water"
+                value="Contaminated or Polluted Water"
+              />
+              <Picker.Item
+                label="Unusual Taste or Smell"
+                value="Unusual Taste or Smell"
+              />
+              <Picker.Item label="Pipe Leakage" value="Pipe Leakage" />
+              <Picker.Item
+                label="Overflows or Blockages"
+                value="Overflows or Blockages"
+              />
+              <Picker.Item
+                label="Broken or Damaged Pipes"
+                value="Broken or Damaged Pipes"
+              />
+              <Picker.Item
+                label="Health-Related Issue"
+                value="Health-Related Issue"
+              />
+              <Picker.Item label="Other" value="Other" />
+            </Picker>
             <TextInput
               style={styles.input}
-              placeholder="Name"
-              value={name}
-              onChangeText={setName}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Latitude"
+              placeholder="District"
               value={latitude}
               onChangeText={setLatitude}
-              keyboardType="numeric"
             />
             <TextInput
               style={styles.input}
-              placeholder="Longitude"
-              value={longitude}
-              onChangeText={setLongitude}
-              keyboardType="numeric"
+              placeholder="Town"
+              value={latitude}
+              onChangeText={setLatitude}
             />
+
             <TextInput
               style={[styles.input, styles.multiInput]}
               placeholder="Description"
