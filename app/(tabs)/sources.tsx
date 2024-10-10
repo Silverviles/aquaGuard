@@ -9,7 +9,7 @@ import SourceForm from "@/components/SourceForm";
 export default () => {
     const [carouselId, setCarouselId] = useState('');
     const [showForm, setShowForm] = useState(false);
-    const [formCoordinates, setFormCoordinates] = useState<{ latitude: number, longitude: number } | null>(null);
+    const [formCoordinates, setFormCoordinates] = useState<{ latitude: number, longitude: number } | undefined>(undefined);
 
     const handleLongPress = (coords: { latitude: number, longitude: number }) => {
         setFormCoordinates(coords);
