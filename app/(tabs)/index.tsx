@@ -1,70 +1,167 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from "react";
+import {
+  Image,
+  StyleSheet,
+  ScrollView,
+  Modal,
+  View,
+  TouchableOpacity,
+  Text,
+  ViewComponent,
+} from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import Card from "@/components/home/card";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
+const posts = [
+  {
+    image:
+      "https://img.freepik.com/free-vector/marine-underwater-flora-fauna_1284-37132.jpg?t=st=1728563323~exp=1728566923~hmac=f1266d5c8f36274e72a4449db509884712bd7cd645d9159ace9b4f4d2b0399f5&w=1060",
+    heading: "heading 1",
+    description:
+      "paraparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparapara",
+  },
+  {
+    image:
+      "https://img.freepik.com/free-vector/marine-underwater-flora-fauna_1284-37132.jpg?t=st=1728563323~exp=1728566923~hmac=f1266d5c8f36274e72a4449db509884712bd7cd645d9159ace9b4f4d2b0399f5&w=1060",
+    heading: "heading 2",
+    description:
+      "paraparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparapara",
+  },
+  {
+    image:
+      "https://img.freepik.com/free-vector/marine-underwater-flora-fauna_1284-37132.jpg?t=st=1728563323~exp=1728566923~hmac=f1266d5c8f36274e72a4449db509884712bd7cd645d9159ace9b4f4d2b0399f5&w=1060",
+    heading: "heading 3",
+    description:
+      "paraparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparapara",
+  },
+];
 
 export default function HomeScreen() {
+  const [selectedPost, setSelectedPost] = useState<{
+    image: string;
+    heading: string;
+    description: string;
+  } | null>(null);
+
+  const handleCardPress = (post: {
+    image: string;
+    heading: string;
+    description: string;
+  }) => {
+    setSelectedPost(post);
+  };
+
+  const closeModal = () => {
+    setSelectedPost(null);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <>
+      <ParallaxScrollView
+        headerBackgroundColor={{ light: "#151718", dark: "#151718" }}
+        headerImage={
+          <Image source={require("@/assets/images/header-bg.jpg")} />
+        }
+      >
+        <ScrollView>
+          {posts.map((post, index) => (
+            <TouchableOpacity key={index} onPress={() => handleCardPress(post)}>
+              <Card
+                description={post.description}
+                imageSource={post.image}
+                title={post.heading}
+              />
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Modal for Enlarged Card */}
+        {selectedPost && (
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={!!selectedPost}
+            onRequestClose={closeModal}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Image
+                  source={{ uri: selectedPost.image }}
+                  style={styles.enlargedImage}
+                />
+                <Text style={styles.enlargedTitle}>{selectedPost.heading}</Text>
+                <Text style={styles.enlargedDescription}>
+                  {selectedPost.description}
+                </Text>
+                <TouchableOpacity onPress={closeModal}>
+                  <Text style={styles.closeButton}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        )}
+      </ParallaxScrollView>
+
+      {/* Floating button */}
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={() => {
+          /* handle button press */
+        }}
+      >
+        <Ionicons name="add" size={20} color="#fff" />
+      </TouchableOpacity>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  floatingButton: {
+    position: "absolute",
+    bottom: 50,
+    right: 50,
+    zIndex: 50,
+    backgroundColor: "#7EACB5",
+    borderRadius: 25,
+    padding: 15,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  floatingButtonText: {
+    color: "#FFFFFF",
+    fontSize: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+  },
+  modalContent: {
+    width: "80%",
+    padding: 16,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    alignItems: "center",
+    elevation: 5,
+  },
+  enlargedImage: {
+    width: "100%",
+    height: 200,
+    borderRadius: 10,
+    resizeMode: "cover",
+  },
+  enlargedTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginVertical: 10,
+  },
+  enlargedDescription: {
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  closeButton: {
+    color: "#007BFF",
+    fontWeight: "bold",
   },
 });
