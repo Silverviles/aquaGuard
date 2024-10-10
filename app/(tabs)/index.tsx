@@ -13,6 +13,7 @@ import {
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import Card from "@/components/home/card";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 const posts = [
   {
@@ -39,6 +40,7 @@ const posts = [
 ];
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const [selectedPost, setSelectedPost] = useState<{
     image: string;
     heading: string;
@@ -107,9 +109,7 @@ export default function HomeScreen() {
       {/* Floating button */}
       <TouchableOpacity
         style={styles.floatingButton}
-        onPress={() => {
-          /* handle button press */
-        }}
+        onPress={() => navigation.navigate("report-form")}
       >
         <Ionicons name="add" size={20} color="#fff" />
       </TouchableOpacity>

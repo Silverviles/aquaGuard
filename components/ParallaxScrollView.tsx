@@ -10,6 +10,7 @@ import Animated, {
 import { ThemedView } from "@/components/ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemedText } from "./ThemedText";
+import { Colors } from "@/constants/Colors";
 
 const HEADER_HEIGHT = 250;
 
@@ -95,7 +96,7 @@ export default function ParallaxScrollView({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: Colors.dark.background,
   },
   header: {
     height: 120,
