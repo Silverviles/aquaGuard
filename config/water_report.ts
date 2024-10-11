@@ -4,6 +4,7 @@ import { ref, set } from "@firebase/database";
 import { WaterReportEntry } from "@/types";
 
 function insertUpateWaterReportData(waterReport: WaterReportEntry) {
+  console.log("water report data: ", waterReport);
   set(ref(database, "water_report/" + waterReport.id), {
     title: waterReport.title,
     description: waterReport.description,

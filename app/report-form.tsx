@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
+  Button,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -29,7 +31,7 @@ interface ReportFormProps {
 const ReportForm = ({ setShowForm }: ReportFormProps) => {
   const navigation = useNavigation();
   const [selectedOption, setSelectedOption] = useState("option1");
-
+  const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [town, setTown] = useState("");
   const [district, setDistrict] = useState("");
@@ -60,6 +62,7 @@ const ReportForm = ({ setShowForm }: ReportFormProps) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const imageUrls = await Promise.all(
       photos.map((photo) => uploadImage(photo))
     );
@@ -73,10 +76,11 @@ const ReportForm = ({ setShowForm }: ReportFormProps) => {
       images: imageUrls,
     };
 
+    console.log("water report data: ", waterReport);
+
     insertUpateWaterReportData(waterReport);
-    if (setShowForm) {
-      setShowForm(false);
-    }
+    setLoading(false);
+    navigation.navigate("index");
   };
 
   return (
@@ -164,15 +168,52 @@ const ReportForm = ({ setShowForm }: ReportFormProps) => {
                 onChangeText={setDescription}
                 multiline
               />
-              <TouchableOpacity
-                style={[styles.submitButton, { backgroundColor: "blue" }]}
-                onPress={handleSubmit}
-              >
-                <Text style={styles.submitButtonText}>Submit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.submitButton} onPress={pickImage}>
+
+              {loading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+              ) : (
+                <>
+                  <ThemedView
+                    style={{
+                      backgroundColor: "transparent",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      marginTop: 20,
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={[
+                        styles.submitButton,
+                        { backgroundColor: "blue", zIndex: 10 },
+                      ]}
+                      onPress={handleSubmit}
+                    >
+                      <Text style={styles.submitButtonText}>Submit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.submitButton}
+                      onPress={pickImage}
+                    >
+                      <Text style={styles.submitButtonText}>Attach Photo</Text>
+                    </TouchableOpacity>
+                  </ThemedView>
+                </>
+              )}
+              {/* <View style={{ zIndex: 10 }}>
+                <TouchableOpacity
+                  style={[
+                    styles.submitButton,
+                    { backgroundColor: "blue", zIndex: 10 },
+                  ]}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.submitButtonText}>Submit</Text>
+                </TouchableOpacity>
+              </View> */}
+              {/* <TouchableOpacity style={styles.submitButton} onPress={pickImage}>
                 <Text style={styles.submitButtonText}>Attach Photo</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <View style={styles.photosContainer}>
                 {photos.map((photo, index) => (
                   <Image
