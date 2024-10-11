@@ -12,7 +12,7 @@ import { Picker } from "@react-native-picker/picker";
 import { WaterSourceLocationEntry } from "@/types";
 import { insertUpdateWaterSourceData } from "@/config/water_source";
 import { storage } from "@/config/firebaseConfig";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "@firebase/storage";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import {
   GestureHandlerRootView,

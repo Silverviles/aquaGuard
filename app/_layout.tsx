@@ -39,6 +39,7 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
           {/* The Report screen will be automatically routed if you have report.tsx */}
           <Stack.Screen name="report-form" options={{ headerShown: false }} />
+          <Stack.Screen name="login-form" options={{ headerShown: false }} />
         </Stack>
       </KeyboardAvoidingView>
     </ThemeProvider>
