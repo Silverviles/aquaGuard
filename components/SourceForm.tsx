@@ -58,16 +58,18 @@ const SourceForm = ({ setShowForm, initialCoordinates }: SourceFormProps) => {
       photos.map((photo) => uploadImage(photo))
     );
 
-    const waterSource: WaterSourceLocationEntry = {
-      id: Date.now().toString(), // Generate a unique ID
-      title: name,
-      description: description,
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
-      latitudeDelta: 0.0922, // Default value, adjust as needed
-      longitudeDelta: 0.0421, // Default value, adjust as needed
-      images: imageUrls,
-    };
+        const waterSource: WaterSourceLocationEntry = {
+            id: Date.now().toString(), // Generate a unique ID
+            title: name,
+            description: description,
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            latitudeDelta: 0.0922, // Default value, adjust as needed
+            longitudeDelta: 0.0421, // Default value, adjust as needed
+            images: imageUrls,
+            upVotes: 0,
+            downVotes: 0,
+        };
 
     insertUpdateWaterSourceData(waterSource);
     if (setShowForm) {

@@ -1,15 +1,41 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import WaterCarousel from '@/components/WaterCarousel';
 import MapFragment from "@/components/MapFragment";
 import {START_LOCATION, WATER_SOURCE_MAP_BOUNDARIES} from "@/constants/StaticValues";
-import {entries} from "@/constants/DummyValues";
 import SourceForm from "@/components/SourceForm";
+import {WaterSourceLocationEntry} from "@/types";
+import {getWaterSourceData} from "@/config/water_source";
 
 export default () => {
     const [carouselId, setCarouselId] = useState('');
     const [showForm, setShowForm] = useState(false);
-    const [formCoordinates, setFormCoordinates] = useState<{ latitude: number, longitude: number } | undefined>(undefined);
+    const [formCoordinates, setFormCoordinates] = useState<{
+        latitude: number,
+        longitude: number
+    } | undefined>(undefined);
+    const [locationEntries, setLocationEntries] = useState<WaterSourceLocationEntry[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getWaterSourceData();
+            console.log(data);
+            const formattedData: WaterSourceLocationEntry[] = data.map((item: any) => ({
+                id: item.id,
+                title: item.title,
+                description: item.description,
+                latitude: item.latitude,
+                longitude: item.longitude,
+                latitudeDelta: item.latitudeDelta,
+                longitudeDelta: item.longitudeDelta,
+                images: item.images,
+                upVotes: item.upVotes,
+                downVotes: item.downVotes,
+            }));
+            setLocationEntries(formattedData);
+        };
+        fetchData();
+    }, [showForm]);
 
     const handleLongPress = (coords: { latitude: number, longitude: number }) => {
         setFormCoordinates(coords);
@@ -29,14 +55,14 @@ export default () => {
                 <>
                     <MapFragment
                         mapFragmentPosition={WATER_SOURCE_MAP_BOUNDARIES}
-                        markerLocations={entries}
+                        markerLocations={locationEntries}
                         startLocation={START_LOCATION}
                         setCarouselId={setCarouselId}
                         carouselId={carouselId}
                         onLongPress={handleLongPress}
                     />
                     <View style={styles.carouselContainer}>
-                        <WaterCarousel entries={entries} carouselId={carouselId} setCarouselId={setCarouselId}/>
+                        <WaterCarousel entries={locationEntries} carouselId={carouselId} setCarouselId={setCarouselId}/>
                     </View>
                     {showForm && (
                         <View style={styles.formContainer}>

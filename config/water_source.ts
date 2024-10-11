@@ -1,5 +1,5 @@
 import { database } from "@/config/firebaseConfig";
-import { ref, set } from "@firebase/database";
+import { get, ref, set } from "@firebase/database";
 // @ts-ignore
 import { WaterSourceLocationEntry } from "@/types";
 
@@ -31,4 +31,22 @@ function deleteWaterSourceData(waterSourceId: string) {
     });
 }
 
-export { insertUpdateWaterSourceData, deleteWaterSourceData };
+async function getWaterSourceData() {
+  const snapshot = await get(ref(database, "water_source"));
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    return Object.keys(data).map((key) => ({
+      id: key,
+      ...data[key],
+    }));
+  } else {
+    console.log("No data available");
+    return [];
+  }
+}
+
+export {
+  insertUpdateWaterSourceData,
+  deleteWaterSourceData,
+  getWaterSourceData,
+};
