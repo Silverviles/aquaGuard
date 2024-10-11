@@ -9,7 +9,9 @@ export const entries: WaterSourceLocationEntry[] = [
         longitude: -122.4194,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        images: []
+        images: [],
+        upVotes: 0,
+        downVotes: 0,
     },
     {
         id: '2',
@@ -19,7 +21,9 @@ export const entries: WaterSourceLocationEntry[] = [
         longitude: -118.2437,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        images: []
+        images: [],
+        upVotes: 0,
+        downVotes: 0,
     },
     {
         id: '3',
@@ -29,7 +33,9 @@ export const entries: WaterSourceLocationEntry[] = [
         longitude: -74.0060,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        images: []
+        images: [],
+        upVotes: 0,
+        downVotes: 0,
     },
     {
         id: '4',
@@ -39,7 +45,9 @@ export const entries: WaterSourceLocationEntry[] = [
         longitude: -87.6298,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        images: []
+        images: [],
+        upVotes: 0,
+        downVotes: 0,
     },
     {
         id: '5',
@@ -49,6 +57,8 @@ export const entries: WaterSourceLocationEntry[] = [
         longitude: -95.3698,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-        images: []
+        images: [],
+        upVotes: 0,
+        downVotes: 0,
     }
 ];
