@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
+  Button,
   Image,
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -13,12 +16,53 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "@firebase/auth";
+import { auth } from "../config/firebaseConfig";
 
 const LoginForm = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const signIn = async () => {
+    setLoading(true);
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log(response);
+      alert("Logged in successfully");
+      setLoading(false);
+    } catch (error) {
+      alert("Logged in Failed");
+      console.log(error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUp = async () => {
+    setLoading(true);
+
+    try {
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      alert("Sign in Successfully");
+      console.log(response);
+    } catch (error) {
+      alert("Sign in Failed");
+      console.log(error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <GestureHandlerRootView style={styles.gestureHandlerContainer}>
@@ -50,25 +94,34 @@ const LoginForm = () => {
               Enter What you reporting about
             </Text> */}
 
-            <TextInput
-              style={styles.input}
-              placeholder="UseName"
-              value={""}
-              //   onChangeText={''}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              //   value={latitude}
-              //   onChangeText={setLatitude}
-            />
+            <KeyboardAvoidingView behavior="padding">
+              <TextInput
+                style={styles.input}
+                value={email}
+                placeholder="Email"
+                autoCapitalize="none"
+                onChangeText={(text) => setEmail(text)}
+              />
+              <TextInput
+                value={password}
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry={true}
+                autoCapitalize="none"
+                onChangeText={(text) => setPassword(text)}
+              />
 
-            <TouchableOpacity
-              style={[styles.submitButton, { backgroundColor: "blue" }]}
-              //   onPress={handleSubmit}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
+              {loading ? (
+                <ActivityIndicator size="large" color="#0000ff" />
+              ) : (
+                <>
+                  <ThemedView style={styles.loginBtns}>
+                    <Button title="Login" onPress={signIn} />
+                    <Button title="Create Account" onPress={signUp} />
+                  </ThemedView>
+                </>
+              )}
+            </KeyboardAvoidingView>
           </View>
         </ThemedView>
       </ParallaxScrollView>
@@ -88,6 +141,13 @@ const styles = StyleSheet.create({
   bottomImage: {
     width: "100%",
     height: 130,
+  },
+  loginBtns: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    backgroundColor: "transparent",
+    marginTop: 20,
   },
   gestureHandlerContainer: {
     width: "100%",
