@@ -41,4 +41,4 @@ async function getWaterSourceData() {
     }
 }
 
-export {insertUpdateWaterSourceData, deleteWaterSourceData};
+export {insertUpdateWaterSourceData, deleteWaterSourceData, getWaterSourceData};
