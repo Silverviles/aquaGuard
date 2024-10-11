@@ -7,6 +7,8 @@ export interface WaterSourceLocationEntry {
     latitudeDelta: number,
     longitudeDelta: number,
     images?: string[],
+    upVotes: number,
+    downVotes: number,
 }
 
 export interface MapDisplayPosition {
