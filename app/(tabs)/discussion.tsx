@@ -1,10 +1,14 @@
-import React, {useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, StatusBar, Platform } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import React, {useEffect, useState} from "react";
+import {View, Text, StyleSheet, Image, TouchableOpacity, FlatList, StatusBar, Platform, Alert} from "react-native";
+import {Ionicons} from '@expo/vector-icons';
 import DiscussionForm from "@/components/DiscussionForm";
-import {database } from "@/config/firebaseConfig";
+import {database} from "@/config/firebaseConfig";
 import {ref, onValue, update} from "@firebase/database";
-import { useAuth } from "@/config/AuthContext";
+import {useAuth} from "@/config/AuthContext";
+import DiscussionPost from "@/components/DiscussionPost";
+import { remove } from "firebase/database";
+import { Picker } from "@react-native-picker/picker";
+import UpdatePage from "@/components/UpdateDiscussion";
 
 interface Discussion {
     id: string,
@@ -12,95 +16,171 @@ interface Discussion {
     author: string,
     content: string,
     likes: number,
-    comments: number,
-    image: string // No image for this discussion
+    comments: string[],
+    image: string,
+    category: string
 }
 
-const DiscussionItem: React.FC<{ discussion: Discussion }> = ({discussion}) => {
+const DiscussionItem: React.FC<{
+    discussion: Discussion,
+    handleDiscussionPost: () => void,
+    handleSelectedDiscussion: (discussion: Discussion) => void
+    handleUpdatePage: (discussion: Discussion) => void
+}> = ({discussion, handleDiscussionPost, handleSelectedDiscussion, handleUpdatePage}) => {
 
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
     const [likes, setLikes] = useState(discussion.likes);
 
+    const {user, authenticating} = useAuth();
+
     const handleLikes = () => {
         const discussionRef = ref(database, `discussions/${discussion.id}`);
-
-        if (liked) {
-            // If the post is already liked, undo the like
-            setLikes(likes - 1);
-            setLiked(false);
-            update(discussionRef, { likes: likes - 1 });
-        } else {
-            // If the post is not liked yet, increment the like
-            setLikes(likes + 1);
-            setLiked(true);
-            if (disliked) {
-                // If the user has disliked, we also remove that dislike
-                setLikes(likes + 1);
-                setDisliked(false);
-                update(discussionRef, { likes: likes + 1});
+        if (user) {
+            if (liked) {
+                // If the post is already liked, undo the like
+                setLikes(likes - 1);
+                setLiked(false);
+                update(discussionRef, {likes: likes - 1});
             } else {
-                update(discussionRef, { likes: likes + 1 });
+                // If the post is not liked yet, increment the like
+                setLikes(likes + 1);
+                setLiked(true);
+                if (disliked) {
+                    // If the user has disliked, we also remove that dislike
+                    setLikes(likes + 1);
+                    setDisliked(false);
+                    update(discussionRef, {likes: likes + 1});
+                } else {
+                    update(discussionRef, {likes: likes + 1});
+                }
             }
         }
     };
 
     const handleDislikes = () => {
         const discussionRef = ref(database, `discussions/${discussion.id}`);
-
-        if (disliked) {
-            // If the post is already disliked, undo the dislike
-            setLikes(likes + 1);
-            setDisliked(false);
-            update(discussionRef, { likes: likes + 1});
-        } else {
-            // If the post is not disliked yet, increment the dislike
-            setLikes(likes - 1);
-            setDisliked(true);
-            if (liked) {
-                // If the user has liked, we also remove that like
-                setLikes(likes - 1);
-                setLiked(false);
-                update(discussionRef, { likes: likes - 1});
+        if (user) {
+            if (disliked) {
+                // If the post is already disliked, undo the dislike
+                setLikes(likes + 1);
+                setDisliked(false);
+                update(discussionRef, {likes: likes + 1});
             } else {
-                update(discussionRef, { likes: likes - 1});
+                // If the post is not disliked yet, increment the dislike
+                setLikes(likes - 1);
+                setDisliked(true);
+                if (liked) {
+                    // If the user has liked, we also remove that like
+                    setLikes(likes - 1);
+                    setLiked(false);
+                    update(discussionRef, {likes: likes - 1});
+                } else {
+                    update(discussionRef, {likes: likes - 1});
+                }
             }
         }
     };
 
+    const handleTap = () => {
+        handleSelectedDiscussion(discussion);
+        handleDiscussionPost();
+    }
+
+    const deleteDiscussion = async () => {
+        const discussionRef = ref(database, `discussions/${discussion.id}`);
+        try {
+            await remove(discussionRef); // Remove the discussion from Firebase
+            Alert.alert('Deleted', 'The discussion has been deleted.');
+        } catch (error) {
+            console.error('Error deleting discussion:', error);
+        }
+    };
+
+    const handleLongPress = () => {
+        // Check if the current user is the author
+        if (user?.email?.split('@')[0] === discussion.author) {
+            // Alert.alert(
+            //     "Delete Post",
+            //     "Are you sure you want to delete this post?",
+            //     [
+            //         {
+            //             text: "Cancel",
+            //             style: "cancel",
+            //         },
+            //         {
+            //             text: "Delete",
+            //             onPress: () => deleteDiscussion(),
+            //             style: "destructive", // Red button for destructive action
+            //         },
+            //     ],
+            //     {cancelable: true}
+            // );
+            Alert.alert(
+                "Options",
+                "Choose an action",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel",
+                    },
+                    {
+                        text: "Delete",
+                        onPress: () => deleteDiscussion(),
+                        style: "destructive", // Red button for destructive action
+                    },
+                    {
+                        text: "Update",
+                        onPress: () => {
+                            // Navigate to the update page or handle the update logic here
+                            handleUpdatePage(discussion);
+                        }
+                    },
+                ],
+                { cancelable: true }
+            );
+        }
+    };
+
     return (
-        <View style={styles.discussionCard}>
-            <Text style={styles.title}>{discussion.title}</Text>
-            <Text style={styles.author}>/{discussion.author}</Text>
-            {discussion.image && (
-                <Image source={{uri: discussion.image}} style={styles.discussionImage}/>
-            )}
-            <Text style={styles.content}>{discussion.content}</Text>
-            <View style={styles.actions}>
-                <View style={styles.iconRow}>
-                    <TouchableOpacity onPress={handleLikes}>
-                        <Ionicons name="thumbs-up-outline" size={24} color="#ffffff"/>
-                        <Text style={styles.likeText}>{discussion.likes}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleDislikes}>
-                        <Ionicons name="thumbs-down-outline" size={24} color="#ff1744"/>
+        <TouchableOpacity onPress={handleTap} onLongPress={handleLongPress}>
+            <View style={styles.discussionCard}>
+                <Text style={styles.title}>{discussion.title}</Text>
+                <Text style={styles.author}>/{discussion.author}</Text>
+                {discussion.image && (
+                    <Image source={{uri: discussion.image}} style={styles.discussionImage}/>
+                )}
+                {(!discussion.image && discussion.content) && <Text style={styles.content}>{discussion.content}</Text>}
+                <View style={styles.actions}>
+                    <View style={styles.iconRow}>
+                        <TouchableOpacity onPress={handleLikes}>
+                            <Ionicons name="thumbs-up-outline" size={24} color="#ffffff"/>
+                            <Text style={styles.likeText}>{discussion.likes}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleDislikes}>
+                            <Ionicons name="thumbs-down-outline" size={24} color="#ff1744"/>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={styles.commentButton} onPress={handleTap}>
+                        <Ionicons name="chatbubble-outline" size={24} color="#ffffff"/>
+                        <Text style={styles.commentButtonText}>Comment</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.commentButton}>
-                    <Ionicons name="chatbubble-outline" size={24} color="#ffffff"/>
-                    <Text style={styles.commentButtonText}>Comment</Text>
-                </TouchableOpacity>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 
 const DiscussionScreen: React.FC = () => {
-    const renderItem = ({item}: { item: Discussion }) => <DiscussionItem discussion={item}/>;
     const [showForm, setShowForm] = useState(false);
-
+    const [showPost, setShowPost] = useState(false);
+    const [selectedDiscussion, setSelectedDiscussion] = useState({} as Discussion);
     const [discussions, setDiscussions] = useState<Discussion[]>([]);
-    const { user, authenticating } = useAuth();
+    const {user, authenticating} = useAuth();
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [filteredDiscussions, setFilteredDiscussions] = useState<Discussion[]>([]);
+
+    const [showUpdatePage, setShowUpdatePage] = useState(false);
 
     useEffect(() => {
         const discussionsRef = ref(database, "discussions");
@@ -123,21 +203,68 @@ const DiscussionScreen: React.FC = () => {
         return () => unsubscribe();
     }, [database]);
 
+    useEffect(() => {
+        if (selectedCategory === "All" || selectedCategory === '') {
+            setFilteredDiscussions(discussions);
+        }else if(selectedCategory === 'myPosts'){
+            setFilteredDiscussions(discussions.filter(discussion => discussion.author === user?.email?.split('@')[0]));
+        }
+        else {
+            setFilteredDiscussions(discussions.filter(discussion => discussion.category === selectedCategory));
+        }
+    }, [selectedCategory, discussions]);
+
     const handleDiscussionForm = () => {
         setShowForm(!showForm);
+    };
+
+    const handleDiscussionPost = () => {
+        setShowPost(!showPost);
+    };
+
+    const handleSelectedDiscussion = (discussion: Discussion) => {
+        setSelectedDiscussion(discussion);
+    }
+
+    const handleUpdatePage = (discussion: Discussion) => {
+        setSelectedDiscussion(discussion);
+        setShowUpdatePage(true); // Show the update page
     };
 
     return (
         <>
             <View style={styles.container}>
                 <StatusBar barStyle="light-content" backgroundColor="#121212"/>
+
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={selectedCategory}
+                        onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="All" value="All" />
+                        <Picker.Item label="Water Quality" value="Water Quality" />
+                        <Picker.Item label="Sanitation" value="Sanitation" />
+                        <Picker.Item label="Education" value="Education" />
+                        <Picker.Item label="Climate" value="Climate" />
+                        <Picker.Item label="Health" value="Health" />
+                        <Picker.Item label="Q&A" value="Q&A" />
+                        <Picker.Item label="Other" value="Other" />
+                        {user && <Picker.Item label="My Posts" value="myPosts" />}
+                    </Picker>
+                </View>
+
                 <FlatList
-                    data={discussions}
-                    renderItem={renderItem}
+                    data={filteredDiscussions}
+                    renderItem={({item}: { item: Discussion }) =>
+                        <DiscussionItem discussion={item}
+                                        handleDiscussionPost={handleDiscussionPost}
+                                        handleSelectedDiscussion={handleSelectedDiscussion}
+                                        handleUpdatePage={handleUpdatePage}
+                        />}
                     keyExtractor={(item) => item.id}
                     contentContainerStyle={styles.discussionList}
                 />
-                {/* Floating button for adding new discussions */}
                 {user && <TouchableOpacity
                     style={styles.floatingButton}
                     onPress={handleDiscussionForm}
@@ -150,6 +277,17 @@ const DiscussionScreen: React.FC = () => {
                     <DiscussionForm closeDiscussionForm={handleDiscussionForm}/>
                 </View>
             )}
+            {showPost && (
+                <View style={styles.postContainer}>
+                    <DiscussionPost discussion={selectedDiscussion} handleDiscussionPost={handleDiscussionPost}/>
+                </View>
+            )}
+            {showUpdatePage && (
+                <View style={styles.formContainer}>
+                    <UpdatePage discussion={selectedDiscussion} closeUpdatePage={() => setShowUpdatePage(false)} />
+                </View>
+            )}
+
         </>
     );
 };
@@ -188,7 +326,7 @@ const styles = StyleSheet.create({
     },
     discussionImage: {
         width: "100%",
-        height: 150,
+        height: 200,
         borderRadius: 10,
         marginBottom: 10,
     },
@@ -202,7 +340,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         //backgroundColor: "#333",
-        width:'20%',
+        width: '20%',
     },
     likeText: {
         color: "#ffffff",
@@ -243,6 +381,24 @@ const styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: 'rgba(255, 255, 255, 0.9)', // Optional: add a semi-transparent background
         zIndex: 10,
+    },
+    postContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: '#000', // Optional: add a semi-transparent background
+        zIndex: 10,
+    },
+
+    pickerContainer: {
+        backgroundColor: "#1E1E1E",
+        borderRadius: 10,
+        marginBottom: 15,
+    },
+    picker: {
+        color: "white", // White text for dropdown
     },
 });
 

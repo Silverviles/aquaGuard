@@ -4,6 +4,7 @@ import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -44,9 +45,9 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="discussion"
                 options={{
-                    title: 'Community Discussion',
+                    title: 'Discussion',
                     tabBarIcon: ({color, focused}) => (
-                        <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color}/>
+                        <Ionicons name="chatbubbles-outline" size={24} color={color} />
                     ),
                 }}
             />

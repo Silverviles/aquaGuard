@@ -1,17 +1,30 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ScrollView, StatusBar, Platform, Alert } from "react-native";
 import { Picker } from '@react-native-picker/picker'; // For dropdown
 import * as ImagePicker from 'expo-image-picker'; // For image upload
 import { database, storage } from "@/config/firebaseConfig";
-import { DatabaseReference, push, ref, set} from "@firebase/database";
+import { ref, set } from "@firebase/database";
 import {ref as stRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import { useAuth } from "@/config/AuthContext";
+import { update } from "firebase/database";
 
-interface DiscussionFormProps {
-    closeDiscussionForm: () => void;
+interface Discussion {
+    id: string,
+    title: string,
+    author: string,
+    content: string,
+    likes: number,
+    comments: string[],
+    image: string,
+    category: string
 }
 
-const DiscussionForm: React.FC<DiscussionFormProps> = ({closeDiscussionForm}) => {
+interface UpdatePageProps {
+    discussion: Discussion; // Pass the discussion data as a prop
+    closeUpdatePage: () => void;
+}
+
+const UpdatePage: React.FC<UpdatePageProps> = ({ discussion, closeUpdatePage }) => {
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("");
     const [content, setContent] = useState("");
@@ -20,11 +33,18 @@ const DiscussionForm: React.FC<DiscussionFormProps> = ({closeDiscussionForm}) =>
     const { user } = useAuth();
 
     useEffect(() => {
-        if (user && user!.email) {
-            let name = user!.email!.split('@')[0];
+        console.log(discussion.image);
+        if (user && user.email) {
+            let name = user.email.split('@')[0];
             setAuthor(name);
         }
-    }, []);
+
+        // Populate state with discussion data
+        setTitle(discussion.title);
+        setCategory(discussion.category);
+        setContent(discussion.content);
+        setImageUri(discussion.image || "");
+    }, [discussion]);
 
     // Image picker function
     const pickImage = async () => {
@@ -47,64 +67,51 @@ const DiscussionForm: React.FC<DiscussionFormProps> = ({closeDiscussionForm}) =>
     };
 
     // Submit handler function (to send data to Firebase)
-    const handleSubmit = async () => {
-        if (title.trim()==""){
+    const handleUpdate = async () => {
+        if (title.trim() === "") {
             Alert.alert("Enter a title", "Title cannot be empty");
             return;
         }
-        if (category==""){
+        if (category === "") {
             Alert.alert("Please Select a Category");
             return;
         }
+
         let imageUrl = null;
         if (imageUri) {
             imageUrl = await uploadImage(imageUri);
+        } else {
+            imageUrl = discussion.image??null; // Keep the existing image if no new image is selected
         }
 
-        const newDiscussion = {
+        const updatedDiscussion = {
             title,
             category,
             content,
-            image: imageUrl,
-            likes: 0,
-            comments: [],
-            author
+            image: imageUrl
         };
 
-        // Get a reference to the discussions node
-        const discussionsRef = ref(database, "discussions");
-
-        // Push the new discussion and get the auto-generated key
-        const newDiscussionRef = push(discussionsRef);
-
-        // Save the discussion with the generated key
-        set(newDiscussionRef, newDiscussion)
+        // Update the discussion in Firebase
+        const discussionRef = ref(database, `discussions/${discussion.id}`);
+        update(discussionRef, updatedDiscussion)
             .then(() => {
-                // Reset the form or handle success
-                setTitle("");
-                setCategory("");
-                setContent("");
-                setImageUri("");
-                closeDiscussionForm();
+                closeUpdatePage();
             })
             .catch((error) => {
-                console.error("Error saving discussion:", error);
+                console.error("Error updating discussion:", error);
             });
-
     };
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#1a1a1a"/>
+            <StatusBar barStyle="light-content" backgroundColor="#1a1a1a" />
             {/* Header with Close (X) and Submit (Check) */}
             <View style={styles.header}>
-                <TouchableOpacity
-                    onPress={closeDiscussionForm}
-                >
+                <TouchableOpacity onPress={closeUpdatePage}>
                     <Text style={styles.cancelText}>X</Text>
                 </TouchableOpacity>
-                <Text style={styles.title}>New Discussion</Text>
-                <TouchableOpacity onPress={handleSubmit}>
+                <Text style={styles.title}>Update Discussion</Text>
+                <TouchableOpacity onPress={handleUpdate}>
                     <Text style={styles.submitText}>✓</Text>
                 </TouchableOpacity>
             </View>
@@ -125,14 +132,14 @@ const DiscussionForm: React.FC<DiscussionFormProps> = ({closeDiscussionForm}) =>
                     style={styles.picker}
                     onValueChange={(itemValue) => setCategory(itemValue)}
                 >
-                    <Picker.Item label="Select Category" value=""/>
-                    <Picker.Item label="Water Quality" value="Water Quality"/>
-                    <Picker.Item label="Sanitation" value="Sanitation"/>
-                    <Picker.Item label="Education" value="Education"/>
-                    <Picker.Item label="Climate" value="Climate"/>
-                    <Picker.Item label="Health" value="Health"/>
-                    <Picker.Item label="Q&A" value="Q&A"/>
-                    <Picker.Item label="Other" value="Other"/>
+                    <Picker.Item label="Select Category" value="" />
+                    <Picker.Item label="Water Quality" value="Water Quality" />
+                    <Picker.Item label="Sanitation" value="Sanitation" />
+                    <Picker.Item label="Education" value="Education" />
+                    <Picker.Item label="Climate" value="Climate" />
+                    <Picker.Item label="Health" value="Health" />
+                    <Picker.Item label="Q&A" value="Q&A" />
+                    <Picker.Item label="Other" value="Other" />
                 </Picker>
             </View>
 
@@ -142,7 +149,7 @@ const DiscussionForm: React.FC<DiscussionFormProps> = ({closeDiscussionForm}) =>
             </TouchableOpacity>
 
             {imageUri && (
-                <Image source={{uri: imageUri}} style={styles.imagePreview}/>
+                <Image source={{ uri: imageUri }} style={styles.imagePreview} />
             )}
 
             {/* Body Text Input */}
@@ -183,20 +190,20 @@ const styles = StyleSheet.create({
     },
     cancelText: {
         fontSize: 24,
-        color: '#f00',
-        fontWeight: 'bold',
+        color: '#fff',
     },
     submitText: {
         fontSize: 24,
-        color: '#0f0',
-        fontWeight: 'bold',
+        color: '#6200EA', // Color for submit icon
     },
     input: {
-        backgroundColor: "#333", // Dark background for inputs
-        color: "white", // White text
-        padding: 15,
-        borderRadius: 10,
-        marginBottom: 15,
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        color: 'white',
+        marginBottom: 10,
     },
     pickerContainer: {
         backgroundColor: "#333",
@@ -207,28 +214,24 @@ const styles = StyleSheet.create({
         color: "white", // White text for dropdown
     },
     uploadButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#333", // Dark button background
-        padding: 15,
-        borderRadius: 10,
-        marginBottom: 15,
+        backgroundColor: "#6200EA",
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 10,
     },
     uploadText: {
-        color: "white",
-        //marginLeft: 10,
+        color: 'white',
+        textAlign: 'center',
     },
     imagePreview: {
-        width: 100,
-        height: 100,
+        width: "100%",
+        height: 200,
         borderRadius: 10,
-        marginBottom: 15,
+        marginBottom: 10,
     },
     bodyTextInput: {
         height: 100,
-        textAlignVertical: 'top', // For multiline input
     },
 });
 
-export default DiscussionForm;
-
+export default UpdatePage;
