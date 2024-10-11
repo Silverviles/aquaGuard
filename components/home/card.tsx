@@ -10,7 +10,11 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ imageSource, title, description }) => {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: imageSource }} style={styles.image} />
+      <Image
+        source={{ uri: imageSource }}
+        style={styles.image}
+        onError={(error) => console.log("Image Load Error: ", error)}
+      />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
     </View>
@@ -30,9 +34,10 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   image: {
-    width: "100%",
-    height: 150,
+    width: "100%", // Set to the full width of the parent container
+    height: 150, // Fixed height
     borderRadius: 10,
+    resizeMode: "cover", // Ensures the image scales properly
   },
   title: {
     fontSize: 20,

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import {
   Image,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -9,36 +11,28 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Picker } from "@react-native-picker/picker";
-import { WaterSourceLocationEntry } from "@/types";
-import { insertUpdateWaterSourceData } from "@/config/water_source";
+import { WaterReportEntry } from "@/types";
 import { storage } from "@/config/firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "@firebase/storage";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import {
-  GestureHandlerRootView,
-  ScrollView,
-} from "react-native-gesture-handler";
-import { FullWindowOverlay } from "react-native-screens";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "expo-router";
 import { ThemedView } from "@/components/ThemedView";
+import { insertUpateWaterReportData } from "@/config/water_report";
 
-interface SourceFormProps {
+interface ReportFormProps {
   setShowForm?: (value: ((prevState: boolean) => boolean) | boolean) => void;
   initialCoordinates?: { latitude: number; longitude: number };
 }
 
-const ReportForm = ({ setShowForm, initialCoordinates }: SourceFormProps) => {
-  const [name, setName] = useState("");
+const ReportForm = ({ setShowForm }: ReportFormProps) => {
   const navigation = useNavigation();
   const [selectedOption, setSelectedOption] = useState("option1");
-  const [latitude, setLatitude] = useState(
-    initialCoordinates?.latitude.toString() || ""
-  );
-  const [longitude, setLongitude] = useState(
-    initialCoordinates?.longitude.toString() || ""
-  );
+
   const [description, setDescription] = useState("");
+  const [town, setTown] = useState("");
+  const [district, setDistrict] = useState("");
   const [photos, setPhotos] = useState<string[]>([]);
 
   const pickImage = async () => {
@@ -70,22 +64,19 @@ const ReportForm = ({ setShowForm, initialCoordinates }: SourceFormProps) => {
       photos.map((photo) => uploadImage(photo))
     );
 
-    const waterSource: WaterSourceLocationEntry = {
+    const waterReport: WaterReportEntry = {
       id: Date.now().toString(), // Generate a unique ID
-      title: name,
+      title: selectedOption,
+      district: district,
+      town: town,
       description: description,
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
-      latitudeDelta: 0.0922, // Default value, adjust as needed
-      longitudeDelta: 0.0421, // Default value, adjust as needed
       images: imageUrls,
     };
 
-    insertUpdateWaterSourceData(waterSource);
+    insertUpateWaterReportData(waterReport);
     if (setShowForm) {
       setShowForm(false);
     }
-    console.log({ name, latitude, longitude, description, photos });
   };
 
   return (
@@ -107,87 +98,92 @@ const ReportForm = ({ setShowForm, initialCoordinates }: SourceFormProps) => {
             </TouchableOpacity>
             <Text style={styles.title}>Make A Report</Text>
           </ThemedView>
-
-          <View style={styles.card}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 16,
-              }}
-            >
-              Enter What you reporting about
-            </Text>
-            <Picker
-              selectedValue={selectedOption}
-              onValueChange={(itemValue) => setSelectedOption(itemValue)}
-              style={{
-                height: 50,
-                width: "100%",
-                marginBottom: 5,
-              }}
-            >
-              <Picker.Item
-                label="Contaminated or Polluted Water"
-                value="Contaminated or Polluted Water"
-              />
-              <Picker.Item
-                label="Unusual Taste or Smell"
-                value="Unusual Taste or Smell"
-              />
-              <Picker.Item label="Pipe Leakage" value="Pipe Leakage" />
-              <Picker.Item
-                label="Overflows or Blockages"
-                value="Overflows or Blockages"
-              />
-              <Picker.Item
-                label="Broken or Damaged Pipes"
-                value="Broken or Damaged Pipes"
-              />
-              <Picker.Item
-                label="Health-Related Issue"
-                value="Health-Related Issue"
-              />
-              <Picker.Item label="Other" value="Other" />
-            </Picker>
-            <TextInput
-              style={styles.input}
-              placeholder="District"
-              value={latitude}
-              onChangeText={setLatitude}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Town"
-              value={latitude}
-              onChangeText={setLatitude}
-            />
-
-            <TextInput
-              style={[styles.input, styles.multiInput]}
-              placeholder="Description"
-              value={description}
-              onChangeText={setDescription}
-              multiline
-            />
-            <TouchableOpacity
-              style={[styles.submitButton, { backgroundColor: "blue" }]}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.submitButton} onPress={pickImage}>
-              <Text style={styles.submitButtonText}>Attach Photo</Text>
-            </TouchableOpacity>
-            <View style={styles.photosContainer}>
-              {photos.map((photo, index) => (
-                <Image
-                  key={index}
-                  source={{ uri: photo }}
-                  style={styles.photo}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+            style={styles.card}
+          >
+            <View>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                Enter What you reporting about
+              </Text>
+              <Picker
+                selectedValue={selectedOption}
+                onValueChange={(itemValue) => setSelectedOption(itemValue)}
+                style={{
+                  height: 50,
+                  width: "100%",
+                  marginBottom: 5,
+                }}
+              >
+                <Picker.Item
+                  label="Contaminated or Polluted Water"
+                  value="Contaminated or Polluted Water"
                 />
-              ))}
+                <Picker.Item
+                  label="Unusual Taste or Smell"
+                  value="Unusual Taste or Smell"
+                />
+                <Picker.Item label="Pipe Leakage" value="Pipe Leakage" />
+                <Picker.Item
+                  label="Overflows or Blockages"
+                  value="Overflows or Blockages"
+                />
+                <Picker.Item
+                  label="Broken or Damaged Pipes"
+                  value="Broken or Damaged Pipes"
+                />
+                <Picker.Item
+                  label="Health-Related Issue"
+                  value="Health-Related Issue"
+                />
+                <Picker.Item label="Other" value="Other" />
+              </Picker>
+              <TextInput
+                style={styles.input}
+                placeholder="District"
+                value={district}
+                onChangeText={setDistrict}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Town"
+                value={town}
+                onChangeText={setTown}
+              />
+
+              <TextInput
+                style={[styles.input, styles.multiInput]}
+                placeholder="Description"
+                value={description}
+                onChangeText={setDescription}
+                multiline
+              />
+              <TouchableOpacity
+                style={[styles.submitButton, { backgroundColor: "blue" }]}
+                onPress={handleSubmit}
+              >
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.submitButton} onPress={pickImage}>
+                <Text style={styles.submitButtonText}>Attach Photo</Text>
+              </TouchableOpacity>
+              <View style={styles.photosContainer}>
+                {photos.map((photo, index) => (
+                  <Image
+                    key={index}
+                    source={{ uri: photo }}
+                    style={styles.photo}
+                  />
+                ))}
+              </View>
             </View>
-          </View>
+          </KeyboardAvoidingView>
         </ThemedView>
       </ParallaxScrollView>
     </GestureHandlerRootView>

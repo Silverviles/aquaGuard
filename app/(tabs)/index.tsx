@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -14,30 +14,8 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import Card from "@/components/home/card";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-
-const posts = [
-  {
-    image:
-      "https://img.freepik.com/free-vector/marine-underwater-flora-fauna_1284-37132.jpg?t=st=1728563323~exp=1728566923~hmac=f1266d5c8f36274e72a4449db509884712bd7cd645d9159ace9b4f4d2b0399f5&w=1060",
-    heading: "heading 1",
-    description:
-      "paraparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparapara",
-  },
-  {
-    image:
-      "https://img.freepik.com/free-vector/marine-underwater-flora-fauna_1284-37132.jpg?t=st=1728563323~exp=1728566923~hmac=f1266d5c8f36274e72a4449db509884712bd7cd645d9159ace9b4f4d2b0399f5&w=1060",
-    heading: "heading 2",
-    description:
-      "paraparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparapara",
-  },
-  {
-    image:
-      "https://img.freepik.com/free-vector/marine-underwater-flora-fauna_1284-37132.jpg?t=st=1728563323~exp=1728566923~hmac=f1266d5c8f36274e72a4449db509884712bd7cd645d9159ace9b4f4d2b0399f5&w=1060",
-    heading: "heading 3",
-    description:
-      "paraparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparaparapara",
-  },
-];
+import { database } from "@/config/firebaseConfig";
+import { get, onValue, ref, set } from "@firebase/database";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -59,6 +37,44 @@ export default function HomeScreen() {
     setSelectedPost(null);
   };
 
+  const [waterPostData, setWaterPostData] = useState<any[] | null>(null);
+
+  async function getAllWaterSourceData() {
+    const waterSourceRef = ref(database, "water_report");
+
+    // Listen for changes in the data
+    onValue(
+      waterSourceRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const formattedData = Object.keys(data).map((key) => {
+            const firstImage =
+              data[key].images && data[key].images.length > 0
+                ? data[key].images[0]
+                : "default_image_url"; // Fallback image if no image is available
+            return {
+              id: key,
+              ...data[key],
+              image: firstImage,
+            };
+          });
+          setWaterPostData(formattedData); // Set the data directly as it has the correct structure
+        } else {
+          console.log("No data available.");
+          setWaterPostData([]); // Set to an empty array if no data
+        }
+      },
+      (error) => {
+        console.error("Error getting data: ", error);
+      }
+    );
+  }
+
+  useEffect(() => {
+    getAllWaterSourceData();
+  }, []);
+
   return (
     <>
       <ParallaxScrollView
@@ -68,12 +84,21 @@ export default function HomeScreen() {
         }
       >
         <ScrollView>
-          {posts.map((post, index) => (
-            <TouchableOpacity key={index} onPress={() => handleCardPress(post)}>
+          {waterPostData?.map((post, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() =>
+                handleCardPress({
+                  image: post.image,
+                  heading: post.title,
+                  description: post.description,
+                })
+              }
+            >
               <Card
-                description={post.description}
                 imageSource={post.image}
-                title={post.heading}
+                title={post.title}
+                description={post.description}
               />
             </TouchableOpacity>
           ))}
