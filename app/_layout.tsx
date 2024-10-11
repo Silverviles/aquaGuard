@@ -11,7 +11,7 @@ import { KeyboardAvoidingView } from "react-native";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { UserProvider } from "../components/UserContext.js";
+import { AuthProvider } from "@/config/AuthContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -49,7 +49,7 @@ export default function RootLayout() {
   }
 
   return (
-    <UserProvider>
+    <AuthProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <Stack>
@@ -60,6 +60,6 @@ export default function RootLayout() {
           </Stack>
         </KeyboardAvoidingView>
       </ThemeProvider>
-    </UserProvider>
+    </AuthProvider>
   );
 }

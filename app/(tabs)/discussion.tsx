@@ -1,10 +1,10 @@
 import React, {useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, StatusBar, Platform } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import DiscussionForm from "@/components/DiscussionForm";
-import { database } from "@/config/firebaseConfig";
-import { DatabaseReference, push, ref, onValue, update} from "@firebase/database";
+import {database } from "@/config/firebaseConfig";
+import {ref, onValue, update} from "@firebase/database";
+import { useAuth } from "@/config/AuthContext";
 
 interface Discussion {
     id: string,
@@ -97,11 +97,10 @@ const DiscussionItem: React.FC<{ discussion: Discussion }> = ({discussion}) => {
 
 const DiscussionScreen: React.FC = () => {
     const renderItem = ({item}: { item: Discussion }) => <DiscussionItem discussion={item}/>;
-    const navigation = useNavigation();
     const [showForm, setShowForm] = useState(false);
 
     const [discussions, setDiscussions] = useState<Discussion[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { user, authenticating } = useAuth();
 
     useEffect(() => {
         const discussionsRef = ref(database, "discussions");
@@ -117,13 +116,10 @@ const DiscussionScreen: React.FC = () => {
             }
 
             setDiscussions(discussionList);
-            setLoading(false);
         }, (error) => {
             console.error("Error retrieving discussions:", error);
-            setLoading(false);
         });
 
-        // Clean up the listener on unmount
         return () => unsubscribe();
     }, [database]);
 
@@ -142,12 +138,12 @@ const DiscussionScreen: React.FC = () => {
                     contentContainerStyle={styles.discussionList}
                 />
                 {/* Floating button for adding new discussions */}
-                <TouchableOpacity
+                {user && <TouchableOpacity
                     style={styles.floatingButton}
                     onPress={handleDiscussionForm}
                 >
                     <Ionicons name="add" size={32} color="white"/>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
             {showForm && (
                 <View style={styles.formContainer}>
