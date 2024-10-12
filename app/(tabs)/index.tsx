@@ -16,6 +16,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { database } from "@/config/firebaseConfig";
 import { get, onValue, ref, set } from "@firebase/database";
+import AppNavigator from "@/components/navigation/StackNavigator";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -60,7 +61,6 @@ export default function HomeScreen() {
             };
           });
           setWaterPostData(formattedData); // Set the data directly as it has the correct structure
-          console.log("Data available: ", formattedData);
         } else {
           console.log("No data available.");
           setWaterPostData([]); // Set to an empty array if no data
