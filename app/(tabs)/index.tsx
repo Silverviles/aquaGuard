@@ -171,7 +171,9 @@ const styles = StyleSheet.create({
   modalContent: {
     width: "80%",
     padding: 16,
-    backgroundColor: "#fff",
+    borderColor: "#000",
+    borderWidth: 2,
+    backgroundColor: "#2a2a2a",
     borderRadius: 10,
     alignItems: "center",
     elevation: 5,
@@ -186,10 +188,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginVertical: 10,
+    color: "#fff",
   },
   enlargedDescription: {
     textAlign: "center",
     marginBottom: 20,
+    color: "#fff",
   },
   closeButton: {
     color: "#007BFF",
