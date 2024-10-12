@@ -1,11 +1,12 @@
 import React, {useEffect, useState } from "react";
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ScrollView, StatusBar, Platform, Alert } from "react-native";
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, Image, StatusBar, Platform, Alert, BackHandler } from "react-native";
 import { Picker } from '@react-native-picker/picker'; // For dropdown
 import * as ImagePicker from 'expo-image-picker'; // For image upload
 import { database, storage } from "@/config/firebaseConfig";
-import { DatabaseReference, push, ref, set} from "@firebase/database";
+import {push, ref, set} from "@firebase/database";
 import {ref as stRef, uploadBytes, getDownloadURL} from "firebase/storage";
 import { useAuth } from "@/config/AuthContext";
+import {Feather, Fontisto } from "@expo/vector-icons";
 
 interface DiscussionFormProps {
     closeDiscussionForm: () => void;
@@ -93,6 +94,23 @@ const DiscussionForm: React.FC<DiscussionFormProps> = ({closeDiscussionForm}) =>
 
     };
 
+    useEffect(() => {
+        // Function to handle the back press
+        const backAction = () => {
+            closeDiscussionForm();
+            return true; // Returning true overrides the default back action
+        };
+
+        // Add event listener for back press
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+
+        // Cleanup the event listener when the component unmounts
+        return () => backHandler.remove();
+    }, []);
+
     return (
         <View style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor="#1a1a1a"/>
@@ -101,11 +119,11 @@ const DiscussionForm: React.FC<DiscussionFormProps> = ({closeDiscussionForm}) =>
                 <TouchableOpacity
                     onPress={closeDiscussionForm}
                 >
-                    <Text style={styles.cancelText}>X</Text>
+                    <Fontisto name="close-a" size={24} color="white" />
                 </TouchableOpacity>
                 <Text style={styles.title}>New Discussion</Text>
                 <TouchableOpacity onPress={handleSubmit}>
-                    <Text style={styles.submitText}>✓</Text>
+                    <Feather name="send" size={24} color="white" />
                 </TouchableOpacity>
             </View>
 

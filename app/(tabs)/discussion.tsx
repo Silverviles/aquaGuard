@@ -150,7 +150,7 @@ const DiscussionItem: React.FC<{
                 {discussion.image && (
                     <Image source={{uri: discussion.image}} style={styles.discussionImage}/>
                 )}
-                {(!discussion.image && discussion.content) && <Text style={styles.content}>{discussion.content}</Text>}
+                {(!discussion.image && discussion.content) && <Text style={styles.content} numberOfLines={5} ellipsizeMode="tail">{discussion.content}</Text>}
                 <View style={styles.actions}>
                     <View style={styles.iconRow}>
                         <TouchableOpacity onPress={handleLikes}>
