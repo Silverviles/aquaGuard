@@ -142,9 +142,13 @@ export default function ParallaxScrollView({
                 color="#fff"
                 style={styles.notification}
               />
-              <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("login-form")}
+              >
                 <Image
-                  source={require("@/assets/images/avatar.jpg")}
+                  source={{
+                    uri: "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg?w=740&t=st=1728655157~exp=1728655757~hmac=14338cbf92763afb37423892e5804ae6e7916a0c0beb8e76c53c14d11e9b3664",
+                  }}
                   style={styles.avatar}
                   resizeMode="cover"
                 />

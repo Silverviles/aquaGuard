@@ -100,7 +100,7 @@ const ReportForm = ({ setShowForm }: ReportFormProps) => {
             >
               <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.title}>Make A Report</Text>
+            <Text style={styles.title}>Want to report something?</Text>
           </ThemedView>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
