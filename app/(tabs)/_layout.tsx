@@ -41,12 +41,25 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
         name="discussion"
         options={{
           title: "Discussion",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name="chatbubbles-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="alert"
+        options={{
+          title: "Alerts",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "notifications" : "notifications-outline"}
+              color={color}
+            />
           ),
         }}
       />

@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: "#666",
+    color: "#d2d7da",
     justifyContent: "center",
     textAlign: "left",
   },
