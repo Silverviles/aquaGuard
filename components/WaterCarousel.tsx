@@ -108,7 +108,7 @@ function WaterCarousel({
               >
                 <Ionicons name="heart" size={20} color="white" />
                 <Text style={waterCarouselStyleSheet.reactionBtnText}>
-                  Like ({reactions[item.id]?.likes ?? 0})
+                  {reactions[item.id]?.likes ?? 0}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -117,7 +117,7 @@ function WaterCarousel({
               >
                 <Ionicons name="thumbs-down" size={20} color="white" />
                 <Text style={waterCarouselStyleSheet.reactionBtnText}>
-                  Dislike ({reactions[item.id]?.dislikes ?? 0})
+                  {reactions[item.id]?.dislikes ?? 0}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -74,6 +74,8 @@ export default () => {
           />
           <View style={styles.carouselContainer}>
             <WaterCarousel
+              dislikes={0}
+              likes={0}
               entries={locationEntries}
               carouselId={carouselId}
               setCarouselId={setCarouselId}
