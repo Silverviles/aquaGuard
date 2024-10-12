@@ -183,19 +183,25 @@ const ReportForm = ({ setShowForm }: ReportFormProps) => {
                     }}
                   >
                     <TouchableOpacity
-                      style={[
-                        styles.submitButton,
-                        { backgroundColor: "blue", zIndex: 10 },
-                      ]}
-                      onPress={handleSubmit}
-                    >
-                      <Text style={styles.submitButtonText}>Submit</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
                       style={styles.submitButton}
                       onPress={pickImage}
                     >
                       <Text style={styles.submitButtonText}>Attach Photo</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        styles.submitButton,
+                        {
+                          backgroundColor: "#2a2a2a",
+                          zIndex: 10,
+                          borderColor: "#040404",
+                          borderWidth: 2,
+                          borderRadius: 10,
+                        },
+                      ]}
+                      onPress={handleSubmit}
+                    >
+                      <Text style={styles.submitButtonText}>Submit</Text>
                     </TouchableOpacity>
                   </ThemedView>
                 </>
@@ -321,6 +327,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 10,
     marginBottom: 10,
+    borderColor: "#6a6a6a",
+    borderWidth: 2,
     alignItems: "center",
   },
   floatingButtonText: {

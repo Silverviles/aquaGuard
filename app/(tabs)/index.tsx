@@ -60,6 +60,7 @@ export default function HomeScreen() {
             };
           });
           setWaterPostData(formattedData); // Set the data directly as it has the correct structure
+          console.log("Data available: ", formattedData);
         } else {
           console.log("No data available.");
           setWaterPostData([]); // Set to an empty array if no data
@@ -99,6 +100,8 @@ export default function HomeScreen() {
                 imageSource={post.image}
                 title={post.title}
                 description={post.description}
+                district={post.district}
+                city={post.town}
               />
             </TouchableOpacity>
           ))}
@@ -146,11 +149,13 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   floatingButton: {
     position: "absolute",
-    bottom: 50,
-    right: 50,
+    bottom: 25,
+    right: 25,
     zIndex: 50,
-    backgroundColor: "#7EACB5",
-    borderRadius: 25,
+    backgroundColor: "#2a2a2a",
+    borderColor: "#040404",
+    borderWidth: 2,
+    borderRadius: 10,
     padding: 15,
   },
   floatingButtonText: {

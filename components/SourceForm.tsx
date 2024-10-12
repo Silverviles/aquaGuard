@@ -12,6 +12,7 @@ import { WaterSourceLocationEntry } from "@/types";
 import { insertUpdateWaterSourceData } from "@/config/water_source";
 import { storage } from "@/config/firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "@firebase/storage";
+import { Colors } from "@/constants/Colors";
 
 interface SourceFormProps {
   setShowForm?: (value: ((prevState: boolean) => boolean) | boolean) => void;
@@ -58,18 +59,18 @@ const SourceForm = ({ setShowForm, initialCoordinates }: SourceFormProps) => {
       photos.map((photo) => uploadImage(photo))
     );
 
-        const waterSource: WaterSourceLocationEntry = {
-            id: Date.now().toString(), // Generate a unique ID
-            title: name,
-            description: description,
-            latitude: parseFloat(latitude),
-            longitude: parseFloat(longitude),
-            latitudeDelta: 0.0922, // Default value, adjust as needed
-            longitudeDelta: 0.0421, // Default value, adjust as needed
-            images: imageUrls,
-            upVotes: 0,
-            downVotes: 0,
-        };
+    const waterSource: WaterSourceLocationEntry = {
+      id: Date.now().toString(), // Generate a unique ID
+      title: name,
+      description: description,
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+      latitudeDelta: 0.0922, // Default value, adjust as needed
+      longitudeDelta: 0.0421, // Default value, adjust as needed
+      images: imageUrls,
+      upVotes: 0,
+      downVotes: 0,
+    };
 
     insertUpdateWaterSourceData(waterSource);
     if (setShowForm) {
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 100,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.light.background,
   },
   closeButton: {
     position: "absolute",
