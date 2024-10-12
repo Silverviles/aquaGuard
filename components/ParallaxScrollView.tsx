@@ -31,6 +31,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "@firebase/auth";
+import { useAuth } from "@/config/AuthContext";
 
 const HEADER_HEIGHT = 250;
 
@@ -54,6 +55,7 @@ export default function ParallaxScrollView({
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
   const navigation = useNavigation();
+  const { user, authenticating } = useAuth();
 
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -149,6 +151,15 @@ export default function ParallaxScrollView({
                   resizeMode="cover"
                 />
               </TouchableOpacity>
+              {
+                user && <Ionicons
+                      name="log-out"
+                      size={20}
+                      color="#fff"
+                      style={styles.notification}
+                      onPress={() => auth.signOut()}
+                  />
+              }
             </ThemedView>
           </Animated.View>
 

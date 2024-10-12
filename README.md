@@ -41,3 +41,12 @@ the water quality and to help users to find water sources and their status.
     npx expo run:android
    ```
 
+## Other Configurations
+
+**1. Configure Specific Jdk**
+
+Add this line to the end of the `gradle.properties` file in the `android` directory of the project.
+```text
+org.gradle.java.home=path/to/jdk
+```
+
