@@ -181,6 +181,7 @@ export default function ParallaxScrollView({
                                     value={email}
                                     style={styles.input}
                                     placeholder="Email"
+                                    placeholderTextColor="white"
                                     autoCapitalize="none"
                                     onChangeText={(text) => setEmail(text)}
                                 />
@@ -188,6 +189,7 @@ export default function ParallaxScrollView({
                                     value={password}
                                     style={styles.input}
                                     placeholder="Password"
+                                    placeholderTextColor="white"
                                     secureTextEntry={true}
                                     autoCapitalize="none"
                                     onChangeText={(text) => setPassword(text)}
@@ -289,15 +291,17 @@ const styles = StyleSheet.create({
     modalView: {
         width: "80%",
         padding: 20,
-        backgroundColor: "white",
+        backgroundColor: "#1E1E1E",
         borderRadius: 10,
         alignItems: "center",
     },
     title: {
+        color: "#fff",
         fontSize: 20,
         marginBottom: 20,
     },
     input: {
+        color: "white",
         width: "100%",
         borderColor: "#ccc",
         borderWidth: 1,
