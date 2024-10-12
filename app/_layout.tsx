@@ -57,6 +57,10 @@ export default function RootLayout() {
             <Stack.Screen name="report-form" options={{ headerShown: false }} />
             {/* Navigate to login-form if user is null, else navigate to (tabs) */}
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="previous_alerts"
+              options={{ headerShown: false }}
+            />
           </Stack>
         </KeyboardAvoidingView>
       </ThemeProvider>

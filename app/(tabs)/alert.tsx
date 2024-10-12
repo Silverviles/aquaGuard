@@ -1,9 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, Button, ImageBackground, TouchableOpacity } from 'react-native';
-import MapViewComponent from '@/components/MapViewComponent';
-import { firestore } from '@/config/firebaseConfig';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  Button,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import MapViewComponent from "@/components/MapViewComponent";
+import { firestore } from "@/config/firebaseConfig";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
 
 interface AlertInfo {
   location: {
@@ -19,14 +29,14 @@ export default function EmergencyAlertSystem() {
 
   useEffect(() => {
     // Subscribe to alerts in Firestore
-    const alertsRef = collection(firestore, 'alerts');
+    const alertsRef = collection(firestore, "alerts");
 
-    const unsubscribe = onSnapshot(alertsRef, snapshot => {
-      snapshot.docChanges().forEach(change => {
-        if (change.type === 'added') {
+    const unsubscribe = onSnapshot(alertsRef, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
           const alertData = change.doc.data() as AlertInfo;
           setAlert(alertData);
-          Alert.alert('Emergency Alert', alertData.message);
+          Alert.alert("Emergency Alert", alertData.message);
         }
       });
     });
@@ -35,11 +45,11 @@ export default function EmergencyAlertSystem() {
   }, []);
 
   return (
-    <ImageBackground
-      source={require('@/assets/images/alertback.jpg')} // Set your background image path here
-      style={styles.backgroundImage}
+    <ParallaxScrollView
+      headerBackgroundColor={{ light: "#151718", dark: "#151718" }}
+      headerImage={<Image source={require("@/assets/images/header-bg.jpg")} />}
     >
-      <View style={styles.overlay}>
+      <View>
         <Text style={styles.header}>Emergency Alerts</Text>
         {alert ? (
           <>
@@ -52,71 +62,71 @@ export default function EmergencyAlertSystem() {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('PreviousAlertsScreen')}
+          onPress={() => navigation.navigate("previous_alerts")}
         >
           <Text style={styles.buttonText}>View Previous Alerts</Text>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  backgroundImage: {
+  container: {
     flex: 1,
-    justifyContent: 'center', // Center the content vertically
-    alignItems: 'center', // Center the content horizontally
-    resizeMode: 'cover',
+    justifyContent: "center", // Center the content vertically
+    alignItems: "center", // Center the content horizontally
+    resizeMode: "cover",
   },
   overlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark overlay for readability
-    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.6)", // Dark overlay for readability
+    width: "100%",
     paddingHorizontal: 20,
   },
   header: {
     fontSize: 28, // Increase font size for better readability
-    color: 'red',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     marginBottom: 50,
-    textAlign: 'center',
-     shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
+    textAlign: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },
   alertMessage: {
     fontSize: 18, // Make text smaller but readable
-    color: '#ff4d4d', // Red color for emphasis
-    textAlign: 'center',
+    color: "#ff4d4d", // Red color for emphasis
+    textAlign: "center",
     marginBottom: 20,
     paddingHorizontal: 10,
   },
   noAlert: {
     fontSize: 18,
-    color: '#90EE90', // Light green for positive message
-    textAlign: 'center',
+    color: "#90EE90", // Light green for positive message
+    textAlign: "center",
     marginBottom: 20,
     paddingHorizontal: 10,
   },
   button: {
-    backgroundColor: '#007BFF', // Bright blue button for contrast
+    backgroundColor: "#376e8a", // Bright blue button for contrast
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 50, // Rounded button for modern look
     marginTop: 30,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5, // Shadow effect for better depth perception
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18, // Make text bigger for accessibility
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

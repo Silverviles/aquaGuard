@@ -136,12 +136,6 @@ export default function ParallaxScrollView({
               Aqua Guard
             </ThemedText>
             <ThemedView style={styles.headerButtons}>
-              <Ionicons
-                name="notifications"
-                size={20}
-                color="#fff"
-                style={styles.notification}
-              />
               <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <Image
                   source={{
