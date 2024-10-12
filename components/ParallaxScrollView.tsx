@@ -238,6 +238,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     marginTop: 20,
   },
+
   header: {
     height: 120,
     borderRadius: 30,

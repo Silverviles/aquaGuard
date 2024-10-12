@@ -16,7 +16,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { database } from "@/config/firebaseConfig";
 import { get, onValue, ref, set } from "@firebase/database";
-import AppNavigator from "@/components/navigation/StackNavigator";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
