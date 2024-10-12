@@ -151,15 +151,15 @@ export default function ParallaxScrollView({
                   resizeMode="cover"
                 />
               </TouchableOpacity>
-              {
-                user && <Ionicons
-                      name="log-out"
-                      size={20}
-                      color="#fff"
-                      style={styles.notification}
-                      onPress={() => auth.signOut()}
-                  />
-              }
+              {user && (
+                <Ionicons
+                  name="log-out"
+                  size={20}
+                  color="#fff"
+                  style={styles.notification}
+                  onPress={() => auth.signOut()}
+                />
+              )}
             </ThemedView>
           </Animated.View>
 
